@@ -1,1 +1,1 @@
-__all__ = ["year_slider","all_time_avg"]
+__all__ = ["year_slider","all_time_avg","city_overviewV2"]
