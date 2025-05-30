@@ -23,9 +23,8 @@ def chart(referred_chart):
                 id = referred_chart,
                 min = daily_fuel_avg["Data da Coleta"].dt.year.unique().tolist()[0],
                 max = daily_fuel_avg["Data da Coleta"].dt.year.unique().tolist()[-1],
-                value = [
-                            daily_fuel_avg["Data da Coleta"].dt.year.unique().tolist()[-5],
-                            daily_fuel_avg["Data da Coleta"].dt.year.unique().tolist()[-1]
+                value = [daily_fuel_avg["Data da Coleta"].dt.year.unique().tolist()[-1],
+                        daily_fuel_avg["Data da Coleta"].dt.year.unique().tolist()[-1]
                         ],
                 step = 1,
                 marks = {i: str(i) for i in range(
@@ -33,6 +32,11 @@ def chart(referred_chart):
                             daily_fuel_avg["Data da Coleta"].dt.year.unique().tolist()[-1],
                             1)
                         },
+                tooltip={"placement": "top",
+                        # "always_visible": True,
+                        "style": {"color": "White", "fontSize": "12px"
+                        },
+    },
             ),
         )
     ])
