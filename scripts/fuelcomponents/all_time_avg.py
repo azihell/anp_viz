@@ -5,7 +5,7 @@ import dfgen
 daily_fuel_avg = dfgen.daily_average_price()
 
 @callback(Output("fuel_avg", "figure"),
-          Input("all_time_slider", "value")
+          Input("main_slider", "value")
          )
 def update_all_time(slider_value):
     figure = px.line(
