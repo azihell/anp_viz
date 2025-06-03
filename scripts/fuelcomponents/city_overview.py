@@ -19,7 +19,7 @@ def update_datatable(slider_value):
         "fixed_rows": {"headers": True},
         "style_table": {"overflowY":"auto",
                         "overflowX":"auto",
-                        "height": 350},
+                        "height": "100%"},
         "style_cell": {"minWidth": "80px", "width": "auto", "maxWidth": "180px", # Responsive column widths
                        "backgroundColor": "rgb(50, 56, 62)",
                        "overflow": "hidden",
