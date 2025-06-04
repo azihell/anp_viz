@@ -19,7 +19,10 @@ def data_load():
     | NE | BA | Feira de Santana | Posto Shell | 02.xxx.xxx/0001-90 | ETANOL | 01-01-2025 | 2.908
     """ 
     # Reduced dataset made of Northeast (NE) retailers only
-    anp_data_NE = pd.read_csv("./data/northeast.csv", parse_dates=["Data da Coleta"], nrows=100000)
+    anp_data_NE = pd.read_csv("./data/northeast.csv",
+                              parse_dates=["Data da Coleta"],
+                              nrows=100000
+                  )
     anp_data_NE.loc[:, "Municipio"] = anp_data_NE.loc[:, "Municipio"].str.title()
     # Reduction to Bahia state only AND not cooking gas
     is_Bahia = anp_data_NE["Estado"]=="BA"

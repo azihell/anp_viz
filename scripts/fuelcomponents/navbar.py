@@ -1,33 +1,46 @@
-from dash import callback, Output, Input, State, html
+from dash import dcc, callback, Output, Input, State, html
 import dash_bootstrap_components as dbc
 from fuelcomponents import offcanvas
 
 right_side = dbc.Row(
     children=[
-        dbc.Col(dbc.NavItem(dbc.NavLink("Home", href="/"))),
-        # dbc.Col(dbc.NavItem(dbc.NavLink("Sobre", href=None, id="open_modal"))),
-        dbc.Col(dbc.Button("Search", color="primary", className="ms-2", n_clicks=0, id="open_modal")),
+        dbc.Col(dbc.Button("Sobre", color="primary", n_clicks=0, id="open_modal",
+                           class_name="g-0 d-flex align-items-center justify-content-center",
+                           style={"border-radius":"8px", "height":"40px", "width":"auto"}
+                ), style={"border": "none"}
+        ),
+        dbc.Col(dbc.NavItem(dbc.NavLink("Contato", href="mailto:azielfreitas@gmail.com" , style={"border": "none"}))),
         dbc.Modal(
             children = [
-                dbc.ModalHeader(dbc.ModalTitle("Sobre")),
-                dbc.ModalBody("Baseado em *dataset* da Agência Nacional de Petróleo e Gás. [Disponível no Kaggle](https://www.kaggle.com/datasets/paulogladson/anp-combustveis) e generosamente compilado por [Paulo Gladson](https://github.com/PauloGladson)."),
+                dbc.ModalHeader(dbc.ModalTitle("Sobre essa visualização...")),
+                dbc.ModalBody("Criada por Aziel Freitas"),
+                dbc.ModalBody(
+                    dcc.Markdown("Baseado em *dataset* provido pela Agência Nacional de Petróleo e Gás. [Disponível no Kaggle](https://www.kaggle.com/datasets/paulogladson/anp-combustveis) e generosamente compilado por [Paulo Gladson](https://github.com/PauloGladson).")
+                    ),
                 dbc.ModalFooter(
-                    dbc.Button("Close", id="close_modal", className="ms-auto", n_clicks=0)
+                    dbc.Button("Fechar", id="close_modal", className="ms-auto", n_clicks=0)
                 ),
             ], id="modal", is_open=False,
         ),
-        dbc.DropdownMenu(
-            children=[
-                dbc.DropdownMenuItem("More pages", header=True),
-                dbc.DropdownMenuItem("Page 1", href="/page1"),
-                dbc.DropdownMenuItem("Page 2", href="/page2"),
-            ],
-            nav=True,
-            in_navbar=True,
-            label="Mais",
-            align_end=True
-        ),
-    ], className="g-0 ms-auto flex-nowrap mt-3 mt-md-0",
+        dbc.Col(
+            dbc.DropdownMenu(
+                children=[
+                    dbc.DropdownMenuItem("More pages", header=True),
+                    dbc.DropdownMenuItem("Page 1", href="/page1"),
+                    dbc.DropdownMenuItem("Page 2", href="/page2"),
+                ],
+                toggle_style={"border": "none"},
+                nav=True,
+                in_navbar=True,
+                label="Mais",
+                align_end=True,
+                # toggleClassName="no-border",
+                # style={"border": "none"}
+            )
+        )
+
+        # className="d-flex align-items-center justify-content-center",
+    ], className="g-0 ms-auto flex-nowrap mt-3 mt-md-0 align-items-center justify-content-center",
 )
 
 
@@ -54,7 +67,7 @@ def generate_navbar():
                                 "Histórico de preços",
                                 # className="ms-2",
                                 className="d-flex align-items-center justify-content-center",
-                                style={"max-height":"30px"})
+                                style={"max-height":"30px", "border":"none"})
                         ),
                     ],
                 align="center",

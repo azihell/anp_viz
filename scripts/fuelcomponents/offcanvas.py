@@ -1,25 +1,36 @@
 import dash_bootstrap_components as dbc
-from dash import Input, Output, State, html
+from dash import Input, Output, State, html, dcc
+from fuelcomponents import year_slider
+from fuelproject_tables import dfgen
 
-# def generate_offcanvas():
-#     offcanvas = dbc.Offcanvas(
-#         html.P("The contents on the main page are now scrollable."),
-#         id="offcanvas-scrollable",
-#         scrollable=True,
-#         title="Scrollable Offcanvas",
-#         is_open=False,
-#     ),
-#     return offcanvas
+city_list = dfgen.city_overall()["Municipio"].unique()
 
 def generate_offcanvas():
     offcanvas = html.Div(
         [
             dbc.Offcanvas(
-                html.P("The contents on the main page are now scrollable."),
+                children=[
+                    dbc.Container([
+                        dbc.Card([
+                            dbc.CardHeader("Anos"),
+                            dbc.CardBody([
+                                    year_slider.chart("main_slider")
+                                ])
+                            ], color="secondary", outline=True
+                        ),
+                        dcc.Dropdown(
+                            city_list,
+                            multi=True
+                        )
+                    ], # className="d-flex flex-column gap-3", style={"height": "100%", "padding": "15px"}
+                    )
+                ],
                 id="offcanvas-scrollable",
                 scrollable=True,
-                title="Scrollable Offcanvas",
+                title="Filtros",
                 is_open=False,
+                keyboard=True,
+                close_button=False,
             ),
         ]
     )

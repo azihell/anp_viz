@@ -23,46 +23,33 @@ app.layout = dbc.Container(children=[
         # className="dbc",    # Uncomment to enable DataTable to be styled according to the theme selected. But loses "style_as_list_view" : True," property while at it.
         style={"max-width": "100%", "padding": "50px", "position":"relative", "top":"20px"},
         children = [
-        dcc.Markdown("Baseado em *dataset* da Agência Nacional de Petróleo e Gás. [Disponível no Kaggle](https://www.kaggle.com/datasets/paulogladson/anp-combustveis) e generosamente compilado por [Paulo Gladson](https://github.com/PauloGladson)."),
-        html.Br(),
         dbc.Row([
-            dbc.Card([
-                dbc.CardHeader("Escolha uma faixa (em anos) como filtro:"),
-                dbc.CardBody([
-                        year_slider.chart("main_slider")
-                    ])
-            ], color="secondary", outline=True
-            ),
             dbc.Col([
-            
-            dbc.Card([
-                dcc.Graph(id = "fuel_avg"),
-            ], color="secondary", outline=True)
-
+                dbc.Card(children=[dcc.Graph(id = "fuel_avg")],
+                         color="secondary", outline=True
+                    )
             ], width = 6),
             dbc.Col([
-            
-            dbc.Card([
-                dbc.Container(id = "city_summary_over_year")    # html.Div(id="city_summary_over_year") works too
-            ], color="secondary", outline=True)
-
+                dbc.Card([
+                    dbc.Container(id = "city_summary_over_year")    # html.Div(id="city_summary_over_year") works too
+                ], color="secondary", outline=True)
             ], width = 6),
         ]),
 
-        # dbc.Row([
-        #     dbc.Col([
-        #         dcc.Graph(
-        #             id = "city_alltime_avg",
-        #             figure = px.bar(
-        #                 dfgen.all_time_avg().sort_values("Municipio",ascending=True),
-        #                 title = "City all-time average, all products",
-        #                 x = "Municipio",
-        #                 y = "Normalized",
-        #                 color = "Produto",
-        #             )
-        #         ),
-        #     ])
-        # ])
+        dbc.Row([
+            dbc.Col([
+                dcc.Graph(
+                    id = "city_alltime_avg",
+                    figure = px.bar(
+                        dfgen.all_time_avg().sort_values("Municipio",ascending=True),
+                        title = "Média normalizada por cidade",
+                        x = "Municipio",
+                        y = "Normalized",
+                        color = "Produto",
+                    )
+                ),
+            ])
+        ])
     ])
 ], fluid=True)
 

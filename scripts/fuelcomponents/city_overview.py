@@ -1,4 +1,4 @@
-from dash import callback, Output, Input, dash_table
+from dash import callback, Output, Input, dash_table, no_update
 import pandas as pd
 import dfgen
 
@@ -6,7 +6,7 @@ city_overall = dfgen.city_overall()
 
 @callback(
     Output("city_summary_over_year", "children"),
-    [Input("main_slider", "value")]
+    Input("main_slider", "value")
 )
 def update_datatable(slider_value):
     """
@@ -19,7 +19,7 @@ def update_datatable(slider_value):
         "fixed_rows": {"headers": True},
         "style_table": {"overflowY":"auto",
                         "overflowX":"auto",
-                        "height": 350},
+                        "height": 400},
         "style_cell": {"minWidth": "80px", "width": "auto", "maxWidth": "180px", # Responsive column widths
                        "backgroundColor": "rgb(50, 56, 62)",
                        "overflow": "hidden",
@@ -43,7 +43,7 @@ def update_datatable(slider_value):
     }
 
     if not slider_value:
-        return dash.no_update
+        return no_update
     table = dash_table.DataTable(
         id="city_summary",
         columns=[{"name": i, "id": i} for i in city_overall.columns],

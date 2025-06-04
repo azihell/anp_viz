@@ -1,11 +1,12 @@
 from dash import dcc, html, callback, Output, Input, State
 import dash_bootstrap_components as dbc
-import dfgen
+from fuelproject_tables import dfgen
 
 daily_fuel_avg = dfgen.daily_average_price()
+minYear = daily_fuel_avg["Data da Coleta"].dt.year.unique().tolist()[0]
+maxYear = daily_fuel_avg["Data da Coleta"].dt.year.unique().tolist()[-1]
 
 def chart(referred_chart):
-
     """
     Generates the chart for this script. It is a slide bar to select the years of data available. These years are obtained from the main dataset or a trusty derivative.
     
@@ -16,27 +17,30 @@ def chart(referred_chart):
       year_slider
     A RangeSlider object from the Dash package.
     """
-
     year_slider = dbc.Container([
-        html.A(
+        dbc.Container(
             dcc.RangeSlider(
                 id = referred_chart,
-                min = daily_fuel_avg["Data da Coleta"].dt.year.unique().tolist()[0],
-                max = daily_fuel_avg["Data da Coleta"].dt.year.unique().tolist()[-1],
+                min = minYear,
+                max = maxYear,
                 value = [daily_fuel_avg["Data da Coleta"].dt.year.unique().tolist()[-1],
-                        daily_fuel_avg["Data da Coleta"].dt.year.unique().tolist()[-1]
+                         daily_fuel_avg["Data da Coleta"].dt.year.unique().tolist()[-1]
                         ],
                 step = 1,
-                marks = {i: str(i) for i in range(
-                            daily_fuel_avg["Data da Coleta"].dt.year.unique().tolist()[0],
-                            daily_fuel_avg["Data da Coleta"].dt.year.unique().tolist()[-1],
-                            1)
-                        },
+                marks={
+                    minYear: {'label': minYear, 'style': {'color': '#77b0b1'}},    # Label for the minimum value
+                    maxYear: {'label': maxYear, 'style': {'color': '#f50'}} # Label for the maximum value
+                },
+                # Marks for all the dots
+                # marks = {i: str(i) for i in range(
+                #             daily_fuel_avg["Data da Coleta"].dt.year.unique().tolist()[0],
+                #             daily_fuel_avg["Data da Coleta"].dt.year.unique().tolist()[-1],
+                #             1)
+                # },
                 tooltip={"placement": "top",
-                        # "always_visible": True,
-                        "style": {"color": "White", "fontSize": "12px"
-                        },
-    },
+                         "style": {"color": "White", "fontSize": "12px"},
+                },
+                dots=True
             ),
         )
     ])
