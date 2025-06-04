@@ -14,7 +14,7 @@ dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.cs
 load_figure_template("SLATE")
 theme = dbc.themes.SLATE
 
-app = Dash(__name__, external_stylesheets=[theme, dbc_css])
+app = Dash(__name__, external_stylesheets=[theme, dbc_css, dbc.icons.FONT_AWESOME])
 
 app.layout = dbc.Container(children=[
     # Top navigation bar
