@@ -18,30 +18,22 @@ def chart(referred_chart):
     A RangeSlider object from the Dash package.
     """
     year_slider = dbc.Container([
-        dbc.Container(
-            dcc.RangeSlider(
-                id = referred_chart,
-                min = minYear,
-                max = maxYear,
-                value = [daily_fuel_avg["Data da Coleta"].dt.year.unique().tolist()[-1],
-                         daily_fuel_avg["Data da Coleta"].dt.year.unique().tolist()[-1]
-                        ],
-                step = 1,
-                marks={
-                    minYear: {'label': minYear, 'style': {'color': '#77b0b1'}},    # Label for the minimum value
-                    maxYear: {'label': maxYear, 'style': {'color': '#f50'}} # Label for the maximum value
-                },
-                # Marks for all the dots
-                # marks = {i: str(i) for i in range(
-                #             daily_fuel_avg["Data da Coleta"].dt.year.unique().tolist()[0],
-                #             daily_fuel_avg["Data da Coleta"].dt.year.unique().tolist()[-1],
-                #             1)
-                # },
-                tooltip={"placement": "top",
-                         "style": {"color": "White", "fontSize": "12px"},
-                },
-                dots=True
-            ),
-        )
+        dcc.RangeSlider(
+            id = referred_chart,
+            min = minYear,
+            max = maxYear,
+            value = [daily_fuel_avg["Data da Coleta"].dt.year.unique().tolist()[-1],
+                        daily_fuel_avg["Data da Coleta"].dt.year.unique().tolist()[-1]
+                    ],
+            step = 1,
+            marks={
+                minYear: {'label': minYear, 'style': {'color': '#77b0b1'}},    # Label for the minimum value
+                maxYear: {'label': maxYear, 'style': {'color': '#f50'}} # Label for the maximum value
+            },
+            tooltip={"placement": "top",
+                        "style": {"color": "White", "fontSize": "12px"},
+            },
+            dots=True
+        ),
     ])
     return year_slider
