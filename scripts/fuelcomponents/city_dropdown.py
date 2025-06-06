@@ -9,7 +9,8 @@ def chart(referred_chart):
         dcc.Dropdown(
             id = referred_chart,
             options = cities,
-            value="Salvador"
+            value=["Feira De Santana", "Salvador"],
+            multi=True
         ),
     ])
     return city_dropdown_list
