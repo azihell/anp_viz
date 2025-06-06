@@ -8,7 +8,7 @@ sys.path.append("./scripts")
 sys.path.append("./scripts/fuelcomponents")
 sys.path.append("./scripts/fuelproject_tables")
 from fuelproject_tables import dfgen
-from fuelcomponents import year_slider, all_time_avg, city_overview, navbar, offcanvas
+from fuelcomponents import year_slider, all_time_avg, city_overview, navbar, offcanvas, city_avg
 
 dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.css"
 load_figure_template("SLATE")
@@ -28,7 +28,12 @@ app.layout = dbc.Container(children=[
                 dbc.Card(children=[dcc.Graph(id = "fuel_avg")],
                          color="secondary", outline=True
                     )
-            ], width = 6),
+            ], width = 3),
+            dbc.Col([
+                dbc.Card(children=[dcc.Graph(id = "city_alltime_avg")],
+                         color="secondary", outline=True
+                    )
+            ], width = 3),
             dbc.Col([
                 dbc.Card([
                     dbc.Container(id = "city_summary_over_year")    # html.Div(id="city_summary_over_year") works too
@@ -36,20 +41,11 @@ app.layout = dbc.Container(children=[
             ], width = 6),
         ]),
 
-        dbc.Row([
-            dbc.Col([
-                dcc.Graph(
-                    id = "city_alltime_avg",
-                    figure = px.bar(
-                        dfgen.all_time_avg().sort_values("Municipio",ascending=True),
-                        title = "Média normalizada por cidade",
-                        x = "Municipio",
-                        y = "Normalized",
-                        color = "Produto",
-                    )
-                ),
-            ])
-        ])
+        # dbc.Row([
+        #     dbc.Col([
+
+        #     ])
+        # ])
     ])
 ], fluid=True)
 
