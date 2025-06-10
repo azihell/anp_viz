@@ -69,8 +69,8 @@ def daily_average_price():
     DIESEL  |  2004-05-10    |         1.315086     | 2004
     """
     # Daily average for all gas stations, by fuel type
-    daily_fuel_avg = data_load().groupby(["Produto","Data da Coleta","Ano"])["Valor de Venda"].agg(["mean"]).reset_index()
-    daily_fuel_avg.columns = ["Produto", "Data da Coleta", "Ano", "Valor de Venda medio"]
+    daily_fuel_avg = data_load().groupby(["Produto","Data da Coleta","Ano","Municipio"])["Valor de Venda"].agg(["mean"]).reset_index()
+    daily_fuel_avg.columns = ["Produto", "Data da Coleta", "Ano", "Municipio", "Valor de Venda medio"]
     # daily_fuel_avg.loc[:, "Ano"] = daily_fuel_avg["Data da Coleta"].dt.year
     return daily_fuel_avg
 
