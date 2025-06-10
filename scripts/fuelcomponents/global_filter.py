@@ -6,4 +6,4 @@ from dash import dcc, callback, Output, Input
     Input('main_slider', 'value'),
 )
 def update_filter_store(city, year):
-    return {"Municipio": city, "Anos": year}
+    return {"Municipio": city, "Ano": year}
