@@ -26,10 +26,10 @@ def chart(referred_chart):
                         daily_fuel_avg["Data da Coleta"].dt.year.unique().tolist()[-1]
                     ],
             step = 1,
-            marks={
-                minYear: {'label': minYear, 'style': {'color': '#77b0b1'}},    # Label for the minimum value
-                maxYear: {'label': maxYear, 'style': {'color': '#f50'}} # Label for the maximum value
-            },
+            # marks={
+            #     minYear: {'label': minYear, 'style': {'color': '#77b0b1'}},    # Label for the minimum value
+            #     maxYear: {'label': maxYear, 'style': {'color': '#f50'}} # Label for the maximum value
+            # },
             tooltip={"placement": "top",
                         "style": {"color": "White", "fontSize": "12px"},
             },
