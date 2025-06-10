@@ -18,7 +18,7 @@ app = Dash(__name__, external_stylesheets=[theme, dbc_css, dbc.icons.FONT_AWESOM
 
 app.layout = dbc.Container(children=[
     dcc.Store(id='global-filter-store',
-        data={"Municipio":None}
+        data={"Municipio":None, "Ano": None}
         ),
     # Top navigation bar
     navbar.generate_navbar(),
