@@ -5,18 +5,18 @@ import plotly.express as px
 import sys
 # 
 sys.path.append("./scripts")
-sys.path.append("./scripts/customcomponents")
+sys.path.append("./scripts/app_components")
 sys.path.append("./scripts/fuelcomponents")
 sys.path.append("./scripts/fuelproject_tables")
 from fuelproject_tables import dfgen
 from fuelcomponents import year_slider, all_time_avg, city_overview, navbar, offcanvas, city_avg, global_filter
-import customcomponents
+import app_components
 
 dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.css"
 load_figure_template("SLATE")
 theme = dbc.themes.SLATE
 
-city_dropdown = customcomponents.MyDropdown("chart1","output1")
+city_dropdown = app_components.MyDropdown("chart1","output1")
 
 app = Dash(__name__, external_stylesheets=[theme, dbc_css, dbc.icons.FONT_AWESOME])
 app.layout = dbc.Container(children=[
