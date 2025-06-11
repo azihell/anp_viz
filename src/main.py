@@ -5,17 +5,20 @@ import plotly.express as px
 import sys
 # 
 sys.path.append("./scripts")
+sys.path.append("./scripts/customcomponents")
 sys.path.append("./scripts/fuelcomponents")
 sys.path.append("./scripts/fuelproject_tables")
 from fuelproject_tables import dfgen
 from fuelcomponents import year_slider, all_time_avg, city_overview, navbar, offcanvas, city_avg, global_filter
+import customcomponents
 
 dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.css"
 load_figure_template("SLATE")
 theme = dbc.themes.SLATE
 
-app = Dash(__name__, external_stylesheets=[theme, dbc_css, dbc.icons.FONT_AWESOME])
+city_dropdown = customcomponents.MyDropdown("chart1","output1")
 
+app = Dash(__name__, external_stylesheets=[theme, dbc_css, dbc.icons.FONT_AWESOME])
 app.layout = dbc.Container(children=[
     dcc.Store(id='global-filter-store',
         data={"Municipio":None, "Ano": None}
@@ -42,6 +45,12 @@ app.layout = dbc.Container(children=[
                     dbc.Container(id = "city_summary_over_year")    # html.Div(id="city_summary_over_year") works too
                 ], color="secondary", outline=True)
             ], width = 6),
+            dbc.Col([
+                dbc.Card([
+                    ###
+                    city_dropdown.render()
+                ], color="secondary", outline=True)
+            ], width = 6),
         ]),
 
         # dbc.Row([
@@ -53,4 +62,4 @@ app.layout = dbc.Container(children=[
 ], fluid=True)
 
 if __name__ == "__main__":
-  app.run(debug=True)
+  app.run(debug=True, port=8060)
