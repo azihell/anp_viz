@@ -2,8 +2,10 @@ from dash import dcc, callback, Output, Input
 
 @callback(
     Output('global-filter-store', 'data'),
-    Input('city_sel', 'value'),
-    Input('main_slider', 'value'),
+    Input('city_dropdown', 'value'),
+    Input('slider_class', 'value'),
+    # Input('city_sel', 'value'),
+    # Input('main_slider', 'value'),
 )
 def update_filter_store(city, year):
     return {"Municipio": city, "Ano": year}
