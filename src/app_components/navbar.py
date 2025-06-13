@@ -2,8 +2,6 @@ from dash import dcc, callback, Output, Input, State, html
 import dash_bootstrap_components as dbc
 from .offcanvas import MyOffcanvas
 
-mycanvas = MyOffcanvas("offcanvas-scrollable-class")
-
 class MyNavbar:
     def __init__(self, component_id, output_container_id):
         """
@@ -112,7 +110,8 @@ class MyNavbar:
                         is_open=False,
                         navbar=True
                     ),
-                # Invokes the offcanvas class
+
+                # Invokes the customized Offcanvas class
                 MyOffcanvas("offcanvas-scrollable-class").render()
                 ],
             fluid=True,

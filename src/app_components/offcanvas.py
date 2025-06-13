@@ -7,7 +7,7 @@ from fuelproject_tables import dfgen
 
 # City list dropdown component object creation
 cities_list = dfgen.city_overall()["Municipio"].unique().tolist()
-city_dropdown = MyDropdown("city_dropdown", cities_list)
+city_dropdown = MyDropdown("city_dropdown", cities_list, None)
 # city_dropdown.register_callbacks(app)
 
 # Years range slider creation
@@ -30,7 +30,7 @@ class MyOffcanvas:
         Renders a dbc.Offcanvas component within a dbc.Container
 
         Returns:
-            offcanvas: A side menu containing filters for custom data navigation
+            dbc.offcanvas: A Dash Bootstrap component Offcanvas. Must be called from within a container.
         """
         offcanvas = html.Div(
             [
@@ -41,7 +41,6 @@ class MyOffcanvas:
                                 dbc.CardHeader("Anos"),
                                 dbc.CardBody([
                                     year_slider.render()
-                                        # year_slider.chart("main_slider")
                                     ])
                                 ], color="secondary", outline=True
                             ),
@@ -49,12 +48,10 @@ class MyOffcanvas:
                                 dbc.CardHeader("Cidades"),
                                 dbc.CardBody([
                                     city_dropdown.render()
-                                    # city_dropdown.chart("city_sel")
                                     ])
                                 ], color="secondary", outline=True
                             ),
-                        ],
-                        )
+                        ]),
                     ],
                     id=self.component_id,
                     scrollable=True,

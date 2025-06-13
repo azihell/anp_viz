@@ -77,7 +77,7 @@ def daily_average_price():
 def all_time_avg():
 
     # Calculates average for every fuel sold in every city
-    city_alltime_avg = data_load().groupby(["Municipio","Produto"])["Valor de Venda"].agg("mean")
+    city_alltime_avg = data_load().groupby(["Municipio","Produto","Ano"])["Valor de Venda"].agg("mean")
     city_alltime_avg = city_alltime_avg.reset_index()
 
     # Calculates maximum of the sum of the average fuel prices for each city.

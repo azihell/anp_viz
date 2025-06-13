@@ -27,8 +27,7 @@ app.layout = dbc.Container(children=[
     dcc.Store(id='global-filter-store',
         data={"Municipio":None, "Ano": None}
         ),
-    # Top navigation bar
-    # navbar.generate_navbar(),
+    # Top navigation bar render method
     navbar_class.render(),
     dbc.Container(
         # className="dbc",    # Uncomment to enable DataTable to be styled according to the theme selected. But loses "style_as_list_view" : True," property while at it.
@@ -52,6 +51,7 @@ app.layout = dbc.Container(children=[
             ], width = 6),
             dbc.Col([
                 dbc.Card([
+                    
                 ], color="secondary", outline=True)
             ], width = 6),
         ]),

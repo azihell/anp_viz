@@ -2,7 +2,7 @@ from dash import dcc, html, callback, Output, Input, State
 import dash_bootstrap_components as dbc
 
 class MyDropdown:
-    def __init__(self, component_id, option_list, initial_values=None):
+    def __init__(self, component_id, option_list, initial_values):
         """
         Initializes a Dropdown component.
 
@@ -12,28 +12,23 @@ class MyDropdown:
             initial_values (list, optional): A list of city names to pre-select. Defaults to ["Feira De Santana", "Salvador"].
         """
         self.component_id = component_id
-        # self.output_container_id = output_container_id
         self.options = option_list
         self.value = initial_values if initial_values is not None else ["Feira De Santana", "Salvador"]
     
     def render(self):
         """
-        Renders the dcc.Dropdown component within a dbc.Container
-        and its associated output container.
-
         Returns:
-            html.Div: A Dash HTML Div containing the dropdown and its output.
+            dcc.Dropdown: A Dash dropdown list. Must be called from within a container.
         """
-        return dbc.Container([
-                dcc.Dropdown(
+        return dcc.Dropdown(
+                # dbc.Container([
                     id=self.component_id,
-                    # options=[{'label': city, 'value': city} for city in self.options],
-                    options = self.options,
+                    options=self.options,
                     value=self.value,
                     multi=True
-                ),
+                )
             # html.Div(id=self.output_container_id) # The output container for this specific dropdown
-            ]),
+            # ]),
 
     # def register_callbacks(self, app):
     #     """

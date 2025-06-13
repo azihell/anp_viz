@@ -5,19 +5,28 @@ import plotly.graph_objects as go
 import dfgen
 
 data = dfgen.all_time_avg()
-# .sort_values("Municipio",ascending=True),
 
 @callback(Output("city_alltime_avg", "figure"),
-          Input("city_sel", "value")
+          Input("global-filter-store", "data")
+        #   Input("city_sel", "value")
          )
 
-def update_avg_barchart(city_selection):
-    if city_selection == []:
-        chart_data = data.sort_values("Municipio",ascending=True)
+def update_avg_barchart(filter_data):
+    municipio_list = filter_data.get("Municipio")
+    ano_list = filter_data.get("Ano")
+    municipio_check = data["Municipio"].isin(municipio_list)
+    ano_check = data["Ano"].isin(ano_list)
+    if municipio_list == []:
+        # All years contribution are added
+        plot_data = data.groupby(["Municipio","Produto"])["Normalized"].agg("sum").reset_index().sort_values("Municipio",ascending=True)
     else:
-        chart_data = data[data["Municipio"].isin(city_selection)].sort_values("Municipio",ascending=True)
+        plot_data = data[municipio_check & ano_check].groupby(["Municipio","Produto"])["Normalized"].agg("sum").reset_index().sort_values("Municipio",ascending=True)
+    # if city_selection == []:
+    #     chart_data = data.sort_values("Municipio",ascending=True)
+    # else:
+    #     chart_data = data[data["Municipio"].isin(city_selection)].sort_values("Municipio",ascending=True)
     figure = px.bar(
-        data_frame = chart_data,
+        data_frame = plot_data,
         title = "Média normalizada por cidade",
         x = "Municipio",
         y = "Normalized",
