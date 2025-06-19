@@ -5,9 +5,8 @@ import dfgen
 city_overall = dfgen.city_overall()
 
 @callback(
-    Output("city_summary_over_year", "children"),
-    # Input("main_slider", "value")
-    Input("filter-selection", "data")
+    Output("city_summary_table", "children"),
+    Input("filtered-dataset", "data")
 )
 def update_datatable(filter_data):
     """
@@ -43,25 +42,27 @@ def update_datatable(filter_data):
                        "fontFamily": "Verdana"},
     }
 
-    municipio_list = filter_data.get("Municipio")
-    ano_list = filter_data.get("Ano")
-    municipio_check = city_overall["Municipio"].isin(municipio_list)
-    ano_check = city_overall["Ano"].isin(ano_list)
-    if municipio_list == []:
-        plot_data = city_overall[ano_check]
-    else:
-        plot_data = city_overall[municipio_check & ano_check]
+    df = pd.DataFrame.from_dict(filter_data)
+    city_overall = df
+    city_overall = city_overall.groupby(["Municipio","Ano","Produto"]).agg({"Revenda":"nunique", "Valor de Venda":["min","max"]}).reset_index()
 
+    new_column_names = []
 
-    # if not slider_value:
-    #     return no_update
+    # Fixes the multilevel column generated when "Valor de Venda" was aggregated by "min" and "max" at the same time.
+    for cols in city_overall.columns:
+        # This only works for the top and adjacent level right below it.
+        new_col_name = f'{cols[0]}_{cols[1]}'
+        new_column_names.append(new_col_name)
+    city_overall.columns = new_column_names
+    city_overall.columns = ['Municipio', 'Ano', 'Produto', 'Numero de Revendas', 'Valor de Venda (min)', 'Valor de Venda (max)']
+
     table = dash_table.DataTable(
         id="city_summary",
         columns=[{"name": i, "id": i} for i in city_overall.columns],
-        data = plot_data.to_dict('records'),
+        data = city_overall.to_dict('records'),
         sort_action="native",
         filter_action="native",
-        page_size=20,
+        page_size=30,
         style_cell_conditional=[
             {
                 'if': {'column_id': c},

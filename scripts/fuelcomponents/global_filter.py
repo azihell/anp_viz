@@ -1,9 +1,9 @@
 from dash import dcc, callback, Output, Input
 
 @callback(
-    Output('global-filter-store', 'data'),
+    Output('global-filter-store2', 'data'),
     Input('city_dropdown', 'value'),
-    Input('slider_class', 'value'),
+    Input('year_slider_class', 'value'),
     # Input('city_sel', 'value'),
     # Input('main_slider', 'value'),
 )

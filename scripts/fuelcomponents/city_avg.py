@@ -4,10 +4,10 @@ import plotly.express as px
 import plotly.graph_objects as go
 import dfgen
 
-data = dfgen.all_time_avg()
+core_data = dfgen.data_load().groupby(["Municipio","Produto","Ano"])["Valor de Venda"].agg("mean").reset_index()
 
 @callback(Output("city_alltime_avg", "figure"),
-          Input("global-filter-store", "data")
+          Input("filter-selection", "data")
          )
 
 def update_avg_barchart(filter_data):

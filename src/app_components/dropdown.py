@@ -1,8 +1,9 @@
 from dash import dcc, html, callback, Output, Input, State
 import dash_bootstrap_components as dbc
+import pandas as pd
 
 class MyDropdown:
-    def __init__(self, component_id, option_list, initial_values):
+    def __init__(self, component_id, option_list, initial_values=None, placeholder=None):
         """
         Initializes a Dropdown component.
 
@@ -13,7 +14,8 @@ class MyDropdown:
         """
         self.component_id = component_id
         self.options = option_list
-        self.value = initial_values if initial_values is not None else ["Feira De Santana", "Salvador"]
+        self.value = initial_values
+        self.placeholder = placeholder
     
     def render(self):
         """
@@ -29,7 +31,16 @@ class MyDropdown:
                 )
             # html.Div(id=self.output_container_id) # The output container for this specific dropdown
             # ]),
-
+    # @callback(
+    #     Output("product_dropdown", "options"),
+    #     Input("product_dropdown", "value"),
+    #     State("filtered-dataset", "data")
+    # )
+    # def abc(ghi, abc):
+    #     df = pd.DataFrame.from_dict(ghi)
+    #     print(df.head(5))
+    #     sel_prods = df.loc[:, "Produto"].unique().tolist()
+    #     return sel_prods
     # def register_callbacks(self, app):
     #     """
     #     Stores the selection for filtering.

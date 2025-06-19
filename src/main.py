@@ -8,10 +8,13 @@ sys.path.append("./scripts")
 sys.path.append("./scripts/app_components")
 sys.path.append("./scripts/fuelcomponents")
 sys.path.append("./scripts/fuelproject_tables")
-from fuelproject_tables import dfgen
-from fuelcomponents import year_slider, all_time_avg, city_overview, offcanvas, city_avg, global_filter
-#, navbar
-import app_components
+import app_components.crossfilter
+# import app_data.dfgen
+# from fuelproject_tables import dfgen
+from fuelcomponents import year_slider, offcanvas
+#, all_time_avg, global_filter, navbar, city_avg, city_overview
+import app_components, app_data
+from app_plots import all_time_avg
 
 dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.css"
 load_figure_template("SLATE")
@@ -24,9 +27,12 @@ navbar_class = app_components.MyNavbar("top_bar", None)
 navbar_class.register_callbacks(app)
 
 app.layout = dbc.Container(children=[
-    dcc.Store(id='global-filter-store',
-        data={"Municipio":None, "Ano": None}
+    dcc.Store(id='filtered-selection',
+        data={"Municipio":None, "Ano":None, "Produto":None}
         ),
+    dcc.Store(id="filtered-dataset",
+              data ={}
+              ),
     # Top navigation bar render method
     navbar_class.render(),
     dbc.Container(
@@ -38,15 +44,15 @@ app.layout = dbc.Container(children=[
                 dbc.Card(children=[dcc.Graph(id = "fuel_avg")],
                          color="secondary", outline=True
                     )
-            ], width = 3),
-            dbc.Col([
-                dbc.Card(children=[dcc.Graph(id = "city_alltime_avg")],
-                         color="secondary", outline=True
-                    )
-            ], width = 3),
+            ], width = 6),
+            # dbc.Col([
+            #     dbc.Card(children=[dcc.Graph(id = "city_alltime_avg")],
+            #              color="secondary", outline=True
+            #         )
+            # ], width = 3),
             dbc.Col([
                 dbc.Card([
-                    dbc.Container(id = "city_summary_over_year")    # html.Div(id="city_summary_over_year") works too
+                    dbc.Container(id = "city_summary_table")    # html.Div(id="city_summary_over_year") works too
                 ], color="secondary", outline=True)
             ], width = 6),
             dbc.Col([
