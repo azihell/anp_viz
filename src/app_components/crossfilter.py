@@ -12,8 +12,8 @@ class Crossfilter():
         pass
 
     @callback(
-        # Output('filtered-selection', 'data'),
         Output('filtered-dataset', 'data'),
+        Output('filtered-selection', 'data'),
         Input('city_dropdown', 'value'),
         Input('year_slider_class', 'value'),
         Input("product_dropdown", "value"),
@@ -23,6 +23,11 @@ class Crossfilter():
         """
         Watches all available inputs and saves the selections in memory.
         """
+
+        all_municipio_list = city or data_load().loc[:, "Municipio"].unique().tolist()
+        all_ano_list = year or data_load().loc[:, "Ano"].unique().tolist()
+        all_produto_list = product or data_load().loc[:, "Produto"].unique().tolist()
+
         # changed_key = None
         current_selection = {"Municipio": city, "Ano": year, "Produto": product}
         # Internally patches previous state in case it initializes with "Null"
@@ -38,12 +43,15 @@ class Crossfilter():
             plot_data = data_load()[ano_check]
         else:
             plot_data = data_load()[municipio_check & ano_check & produto_check]
-        return plot_data.to_dict(orient='records')
+
+        unselected_cities = (list(set(all_municipio_list)-set(current_selection["Municipio"])))
+        unselected_years = (list(set(all_ano_list)-set(current_selection["Ano"])))
+        unselected_products = (list(set(all_produto_list)-set(current_selection["Produto"])))
+
+        return plot_data.to_dict(orient='records'), current_selection
+
 
         # This must be kept for normality (but bad behavior).
-        selected_municipio_list = city or data_load().loc[:, "Municipio"].unique().tolist()
-        selected_year_list = year or data_load().loc[:, "Ano"].unique().tolist()
-        selected_product_list = product or data_load().loc[:, "Produto"].unique().tolist()
         # return {"Municipio": selected_municipio_list, "Ano": selected_year_list, "Produto":selected_product_list}, {"Test": "Nothing"}
         # return {"Municipio": selected_municipio_list, "Ano": selected_year_list, "Produto":selected_product_list}
 
