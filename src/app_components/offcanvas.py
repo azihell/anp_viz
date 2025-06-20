@@ -60,7 +60,8 @@ class MyOffcanvas:
                             dbc.Card([
                                 dbc.CardHeader("Cidades"),
                                 dbc.CardBody([
-                                    city_dropdown.render()
+                                    city_dropdown.render(),
+                                    city_dropdown.register_callback()
                                     ])
                                 ], color="secondary", outline=True
                             ),

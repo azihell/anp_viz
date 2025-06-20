@@ -31,6 +31,31 @@ class MyDropdown:
                 )
             # html.Div(id=self.output_container_id) # The output container for this specific dropdown
             # ]),
+    def register_callback(self):
+        @callback(
+            Output(self.component_id, "options"),
+            Input("filtered-selection", "data"),
+            Input("all-possible", "data"),
+        )
+        def cbk_function(filtered_selection, all_possible):
+            unselected_cities = (list(set(all_possible["Municipio"])-set(filtered_selection["Municipio"])))
+            style_present_values = {'color': 'Black', 'font-size': 12}
+            style_absent_values = {'color': 'Red', 'font-size': 12}
+            dropdown_options = []
+            for item in filtered_selection["Municipio"]:
+                dropdown_options.append({
+                    "label": html.Span([item], style=style_present_values),
+                    "value": item,
+                })
+            for item in (list(set(all_possible["Municipio"])-set(filtered_selection["Municipio"]))):
+                dropdown_options.append({
+                    "label": html.Span([item], style=style_absent_values),
+                    "value": item,
+                })
+            # print(filtered_selection["Municipio"])
+            # print(unselected_cities)
+            # return ["Salvador", "Candeias"]
+            return dropdown_options
     # @callback(
     #     Output("product_dropdown", "options"),
     #     Input("product_dropdown", "value"),

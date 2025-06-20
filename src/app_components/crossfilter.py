@@ -14,6 +14,7 @@ class Crossfilter():
     @callback(
         Output('filtered-dataset', 'data'),
         Output('filtered-selection', 'data'),
+        Output('all-possible', 'data'),
         Input('city_dropdown', 'value'),
         Input('year_slider_class', 'value'),
         Input("product_dropdown", "value"),
@@ -24,11 +25,11 @@ class Crossfilter():
         Watches all available inputs and saves the selections in memory.
         """
 
-        all_municipio_list = city or data_load().loc[:, "Municipio"].unique().tolist()
-        all_ano_list = year or data_load().loc[:, "Ano"].unique().tolist()
-        all_produto_list = product or data_load().loc[:, "Produto"].unique().tolist()
+        all_municipio_list = data_load().loc[:, "Municipio"].unique().tolist()
+        all_ano_list = data_load().loc[:, "Ano"].unique().tolist()
+        all_produto_list = data_load().loc[:, "Produto"].unique().tolist()
+        available_selections = {"Municipio": all_municipio_list, "Ano": all_ano_list, "Produto": all_produto_list}
 
-        # changed_key = None
         current_selection = {"Municipio": city, "Ano": year, "Produto": product}
         # Internally patches previous state in case it initializes with "Null"
         if all(value is None for value in previous_selection.values()):
@@ -38,17 +39,12 @@ class Crossfilter():
         ano_check = data_load().loc[:, "Ano"].isin(current_selection["Ano"])
         municipio_check = data_load().loc[:, "Municipio"].isin(current_selection["Municipio"])
         produto_check = data_load().loc[:, "Produto"].isin(current_selection["Produto"])
-
         if current_selection["Municipio"] == [] or current_selection["Produto"] == []: 
             plot_data = data_load()[ano_check]
         else:
             plot_data = data_load()[municipio_check & ano_check & produto_check]
 
-        unselected_cities = (list(set(all_municipio_list)-set(current_selection["Municipio"])))
-        unselected_years = (list(set(all_ano_list)-set(current_selection["Ano"])))
-        unselected_products = (list(set(all_produto_list)-set(current_selection["Produto"])))
-
-        return plot_data.to_dict(orient='records'), current_selection
+        return plot_data.to_dict(orient='records'), current_selection, available_selections
 
 
         # This must be kept for normality (but bad behavior).
@@ -72,11 +68,11 @@ class Crossfilter():
     #         plot_data = data_load()[municipio_check & ano_check & produto_check]
     #     return plot_data.to_dict(orient='records')
     
-    @callback(
-        Output("product_dropdown", "options"),
-        Input("filtered-dataset", "data")
-    )
-    def abc(abc):
-        df = pd.DataFrame.from_dict(abc)
-        sel_prods = df.loc[:, "Produto"].unique().tolist()
-        return sel_prods
+    # @callback(
+    #     Output("product_dropdown", "options"),
+    #     Input("filtered-dataset", "data")
+    # )
+    # def abc(abc):
+    #     df = pd.DataFrame.from_dict(abc)
+    #     sel_prods = df.loc[:, "Produto"].unique().tolist()
+    #     return sel_prods
