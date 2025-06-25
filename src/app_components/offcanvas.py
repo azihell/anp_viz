@@ -7,13 +7,21 @@ from app_data.dfgen import data_load
 # from fuelcomponents import year_slider, city_dropdown
 
 # City list dropdown component object creation
-cities_list = dfgen.city_overall()["Municipio"].unique().tolist()
+# cities_list = dfgen.city_overall()["Municipio"].unique().tolist()
 city_dropdown = MyDropdown(
     component_id="city_dropdown",
-    option_list=cities_list,
-    initial_values=["Feira De Santana", "Salvador"],
-    placeholder=None)
-# city_dropdown.register_callbacks(app)
+    option_list=[],
+    placeholder="Escolha uma cidade:",
+    dimension="Municipio"
+    )
+# Products dropdown
+products_list = data_load()["Produto"].unique().tolist()
+product_dropdown = MyDropdown(
+    component_id="product_dropdown",
+    option_list=[],
+    placeholder="Escolha um produto",
+    dimension="Produto"
+    )
 
 # Years range slider creation
 daily_fuel_avg = dfgen.daily_average_price()
@@ -24,13 +32,6 @@ maxYear = marks_list[-1]
 default_values = [minYear, maxYear]
 year_slider = MyRangeSlider("year_slider_class", minYear, maxYear, marks, default_values)
 
-# Products dropdown
-products_list = data_load()["Produto"].unique().tolist()
-product_dropdown = MyDropdown(
-                   component_id="product_dropdown",
-                   option_list=products_list,
-                   initial_values=products_list,
-                   placeholder="Escolha um produto")
 
 class MyOffcanvas:
     def __init__(self, component_id):
@@ -68,7 +69,8 @@ class MyOffcanvas:
                             dbc.Card([
                                 dbc.CardHeader("Produtos"),
                                 dbc.CardBody([
-                                    product_dropdown.render()
+                                    product_dropdown.render(),
+                                    product_dropdown.register_callback()
                                     ])
                                 ], color="secondary", outline=True
                             ),

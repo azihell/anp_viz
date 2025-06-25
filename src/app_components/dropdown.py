@@ -3,7 +3,7 @@ import dash_bootstrap_components as dbc
 import pandas as pd
 
 class MyDropdown:
-    def __init__(self, component_id, option_list, initial_values=None, placeholder=None):
+    def __init__(self, component_id, option_list, placeholder, dimension, initial_values=None):
         """
         Initializes a Dropdown component.
 
@@ -16,7 +16,7 @@ class MyDropdown:
         self.options = option_list
         self.value = initial_values
         self.placeholder = placeholder
-    
+        self.dimension = dimension
     def render(self):
         """
         Returns:
@@ -27,7 +27,9 @@ class MyDropdown:
                     id=self.component_id,
                     options=self.options,
                     value=self.value,
-                    multi=True
+                    multi=True,
+                    placeholder=self.placeholder,
+                    maxHeight=300
                 )
             # html.Div(id=self.output_container_id) # The output container for this specific dropdown
             # ]),
@@ -38,16 +40,17 @@ class MyDropdown:
             Input("all-possible", "data"),
         )
         def cbk_function(filtered_selection, all_possible):
-            unselected_cities = (list(set(all_possible["Municipio"])-set(filtered_selection["Municipio"])))
+            unselected_cities = (list(set(all_possible[self.dimension])-set(filtered_selection[self.dimension])))
+            print(self.dimension)
             style_present_values = {'color': 'Black', 'font-size': 12}
             style_absent_values = {'color': 'Red', 'font-size': 12}
             dropdown_options = []
-            for item in filtered_selection["Municipio"]:
+            for item in filtered_selection[self.dimension]:
                 dropdown_options.append({
                     "label": html.Span([item], style=style_present_values),
                     "value": item,
                 })
-            for item in (list(set(all_possible["Municipio"])-set(filtered_selection["Municipio"]))):
+            for item in (list(set(all_possible[self.dimension])-set(filtered_selection[self.dimension]))):
                 dropdown_options.append({
                     "label": html.Span([item], style=style_absent_values),
                     "value": item,

@@ -8,13 +8,13 @@ sys.path.append("./scripts")
 sys.path.append("./scripts/app_components")
 sys.path.append("./scripts/fuelcomponents")
 sys.path.append("./scripts/fuelproject_tables")
-import app_components.crossfilter
+# import app_components.crossfilter
 # import app_data.dfgen
 # from fuelproject_tables import dfgen
-from fuelcomponents import year_slider, offcanvas
+# from fuelcomponents import year_slider, offcanvas
 #, all_time_avg, global_filter, navbar, city_avg, city_overview
 import app_components, app_data
-from app_plots import all_time_avg
+# from app_plots import all_time_avg
 
 dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.css"
 load_figure_template("SLATE")
@@ -26,7 +26,11 @@ app = Dash(__name__, external_stylesheets=[theme, dbc_css, dbc.icons.FONT_AWESOM
 navbar_class = app_components.MyNavbar("top_bar", None)
 navbar_class.register_callbacks(app)
 
+filters = app_components.Crossfilter()
+filters.register_callback(app)
+
 app.layout = dbc.Container(children=[
+    dcc.Location(id='url', refresh=False),
     dcc.Store(id='filtered-selection',
         data={"Municipio":None, "Ano":None, "Produto":None}
         ),
@@ -55,7 +59,7 @@ app.layout = dbc.Container(children=[
             # ], width = 3),
             dbc.Col([
                 dbc.Card([
-                    dbc.Container(id = "city_summary_table")    # html.Div(id="city_summary_over_year") works too
+                    # dbc.Container(id = "city_summary_table")    # html.Div(id="city_summary_over_year") works too
                 ], color="secondary", outline=True)
             ], width = 6),
             dbc.Col([
