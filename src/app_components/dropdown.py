@@ -37,11 +37,10 @@ class MyDropdown:
         @callback(
             Output(self.component_id, "options"),
             Input("filtered-selection", "data"),
-            Input("all-possible", "data"),
+            Input("all-possible-values", "data"),
         )
         def cbk_function(filtered_selection, all_possible):
             unselected_cities = (list(set(all_possible[self.dimension])-set(filtered_selection[self.dimension])))
-            print(self.dimension)
             style_present_values = {'color': 'Black', 'font-size': 12}
             style_absent_values = {'color': 'Red', 'font-size': 12}
             dropdown_options = []

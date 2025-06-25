@@ -24,7 +24,7 @@ class Crossfilter:
         @app.callback(
             Output('filtered-dataset', 'data'),
             Output('filtered-selection', 'data'),
-            Output('all-possible', 'data'),
+            Output('all-possible-values', 'data'),
             Input('city_dropdown', 'value'),
             Input('year_slider_class', 'value'),
             Input("product_dropdown", "value"),
@@ -44,30 +44,62 @@ class Crossfilter:
             ano_check = data_load().loc[:, "Ano"].isin(current_selection["Ano"])
             municipio_check = data_load().loc[:, "Municipio"].isin(current_selection["Municipio"])
             produto_check = data_load().loc[:, "Produto"].isin(current_selection["Produto"])
-            if current_selection["Municipio"] == [] or current_selection["Produto"] == []: 
+            if current_selection["Municipio"] == [] and current_selection["Produto"] == []: 
                 plot_data = data_load()[ano_check]
             else:
                 plot_data = data_load()[municipio_check & ano_check & produto_check]
 
             return plot_data.to_dict(orient='records'), current_selection, full_dataset
         
+
+
         # Load values of the city dropdown component. They are based on the full city dataset seen on the __init__ function.
         @app.callback(
             Output('city_dropdown', 'value'),
             Output('product_dropdown', 'value'),
             Input('url', 'pathname'),
-            Input('year_slider_class', 'value'),
-            State('city_dropdown', 'value')
         )
 
-        def starting_vals(url, other, city_list):
-            if not city_list:
-                print("State is Null!!")
-                return self.all_municipio_list, self.all_produto_list
+        def starting_vals(url):
+            return self.all_municipio_list, self.all_produto_list
 
-        @app.callback(Output("fuel_avg", "figure"),
-                Input("filtered-dataset", "data"),
-                )
+        @app.callback(
+            Output("remaining-choices", "data"),
+            Input('filtered-selection', 'data'),
+            Input('city_dropdown', 'value'),
+        )
+        def get_city_choices(current_filters, 
+                             trigger):
+            df = data_load()
+            product_check = df.loc[:, "Produto"].isin(current_filters["Produto"])
+            year_check = df.loc[:, "Ano"].isin(current_filters["Ano"])
+            filtered_df = df[product_check & year_check]
+            print(filtered_df["Municipio"].unique().tolist())
+
+            # cities_check = df.loc[:, "Produto"].isin(all_possible_values["Produto"])
+            # print(df[cities_check]["Municipio"].unique().tolist()) #["Municipio"].unique().tolist())
+            # combined_mask = pd.Series(True, index=df.index)
+
+
+
+            # all_data = pd.DataFrame.from_dict(full_data)
+            # anos = all_data.loc[:, "Ano"].unique().tolist()
+            # print(anos)
+            # produtos = all_data.loc[:, "Produto"].unique().tolist()
+            # print(produtos)
+            return "A"
+            # Exibir todas as cidades limitadas pelos OUTROS parâmetros de seleção
+
+            # remaining_cities = df.loc[:, "Municipio"].unique().tolist()
+            # print(remaining_cities)
+            # remaining_products = df.loc[:, "Produto"].unique().tolist()
+            # print(remaining_products)
+
+
+        @app.callback(
+            Output("fuel_avg", "figure"),
+            Input("filtered-dataset", "data"),
+            )
         def update_all_time(filter_data):
             # Data preparation
             df = pd.DataFrame.from_dict(filter_data)

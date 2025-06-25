@@ -34,10 +34,13 @@ app.layout = dbc.Container(children=[
     dcc.Store(id='filtered-selection',
         data={"Municipio":None, "Ano":None, "Produto":None}
         ),
-    dcc.Store(id="all-possible",
+    dcc.Store(id="all-possible-values",
               data={"Municipio":None, "Ano":None, "Produto":None}
               ),
     dcc.Store(id="filtered-dataset",
+              data={}
+              ),
+    dcc.Store(id="remaining-choices",
               data={}
               ),
     # Top navigation bar render method
