@@ -1,20 +1,9 @@
 from dash import Dash, dcc #, dash_table, callback, Input, Output
 import dash_bootstrap_components as dbc
 from dash_bootstrap_templates import load_figure_template
-import plotly.express as px
-import sys
-# 
-sys.path.append("./scripts")
-sys.path.append("./scripts/app_components")
-sys.path.append("./scripts/fuelcomponents")
-sys.path.append("./scripts/fuelproject_tables")
-# import app_components.crossfilter
-# import app_data.dfgen
-# from fuelproject_tables import dfgen
-# from fuelcomponents import year_slider, offcanvas
-#, all_time_avg, global_filter, navbar, city_avg, city_overview
-import app_components, app_data
-from app_plots import all_time_avg, city_overview
+
+import app_components, app_data, app_plots
+# from app_plots import all_time_avg, city_overview
 
 dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.css"
 load_figure_template("SLATE")
