@@ -19,8 +19,12 @@ def data_load():
     | NE | BA | Feira de Santana | Posto Shell | 02.xxx.xxx/0001-90 | ETANOL | 01-01-2025 | 2.908
     """ 
     # Reduced dataset made of Northeast (NE) retailers only
-    anp_data_NE = pd.read_csv("./data/northeast.csv", parse_dates=["Data da Coleta"], nrows=100000)
+    anp_data_NE = pd.read_csv("./data/northeast.csv",
+                              parse_dates=["Data da Coleta"],
+                              nrows=100000
+                  )
     anp_data_NE.loc[:, "Municipio"] = anp_data_NE.loc[:, "Municipio"].str.title()
+    anp_data_NE.loc[:, "Ano"] = anp_data_NE["Data da Coleta"].dt.year
     # Reduction to Bahia state only AND not cooking gas
     is_Bahia = anp_data_NE["Estado"]=="BA"
     isnt_GLP = anp_data_NE["Produto"]!="GLP"
@@ -40,7 +44,7 @@ def city_overall():
     """
     # City overall info - for table
     city_overall = data_load()
-    city_overall.loc[:, "Ano"] = city_overall["Data da Coleta"].dt.year
+    # city_overall.loc[:, "Ano"] = city_overall["Data da Coleta"].dt.year
     city_overall = city_overall.groupby(["Municipio","Ano","Produto"]).agg({"Revenda":"nunique", "Valor de Venda":["min","max"]}).reset_index()
 
     new_column_names = []
@@ -65,15 +69,15 @@ def daily_average_price():
     DIESEL  |  2004-05-10    |         1.315086     | 2004
     """
     # Daily average for all gas stations, by fuel type
-    daily_fuel_avg = data_load().groupby(["Produto","Data da Coleta"])["Valor de Venda"].agg(["mean"]).reset_index()
-    daily_fuel_avg.columns = ["Produto", "Data da Coleta", "Valor de Venda medio"]
-    daily_fuel_avg.loc[:, "Ano"] = daily_fuel_avg["Data da Coleta"].dt.year
+    daily_fuel_avg = data_load().groupby(["Produto","Data da Coleta","Ano","Municipio"])["Valor de Venda"].agg(["mean"]).reset_index()
+    daily_fuel_avg.columns = ["Produto", "Data da Coleta", "Ano", "Municipio", "Valor de Venda medio"]
+    # daily_fuel_avg.loc[:, "Ano"] = daily_fuel_avg["Data da Coleta"].dt.year
     return daily_fuel_avg
 
 def all_time_avg():
 
     # Calculates average for every fuel sold in every city
-    city_alltime_avg = data_load().groupby(["Municipio","Produto"])["Valor de Venda"].agg("mean")
+    city_alltime_avg = data_load().groupby(["Municipio","Produto","Ano"])["Valor de Venda"].agg("mean")
     city_alltime_avg = city_alltime_avg.reset_index()
 
     # Calculates maximum of the sum of the average fuel prices for each city.
