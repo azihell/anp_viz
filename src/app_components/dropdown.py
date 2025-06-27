@@ -23,7 +23,6 @@ class MyDropdown:
             dcc.Dropdown: A Dash dropdown list. Must be called from within a container.
         """
         return dcc.Dropdown(
-                # dbc.Container([
                     id=self.component_id,
                     options=self.options,
                     value=self.value,
@@ -31,15 +30,14 @@ class MyDropdown:
                     placeholder=self.placeholder,
                     maxHeight=300
                 )
-            # html.Div(id=self.output_container_id) # The output container for this specific dropdown
-            # ]),
     def register_callback(self):
         @callback(
             Output(self.component_id, "options"),
             Input("filtered-selection", "data"),
             Input("all-possible-values", "data"),
+            Input("remaining-choices", "data")
         )
-        def cbk_function(filtered_selection, all_possible):
+        def cbk_function(filtered_selection, all_possible, remains):
             unselected_cities = (list(set(all_possible[self.dimension])-set(filtered_selection[self.dimension])))
             style_present_values = {'color': 'Black', 'font-size': 12}
             style_absent_values = {'color': 'Red', 'font-size': 12}
@@ -54,33 +52,4 @@ class MyDropdown:
                     "label": html.Span([item], style=style_absent_values),
                     "value": item,
                 })
-            # print(filtered_selection["Municipio"])
-            # print(unselected_cities)
-            # return ["Salvador", "Candeias"]
             return dropdown_options
-    # @callback(
-    #     Output("product_dropdown", "options"),
-    #     Input("product_dropdown", "value"),
-    #     State("filtered-dataset", "data")
-    # )
-    # def abc(ghi, abc):
-    #     df = pd.DataFrame.from_dict(ghi)
-    #     print(df.head(5))
-    #     sel_prods = df.loc[:, "Produto"].unique().tolist()
-    #     return sel_prods
-    # def register_callbacks(self, app):
-    #     """
-    #     Stores the selection for filtering.
-
-    #     Args:
-    #         app (dash.Dash): The Dash application instance.
-    #     """
-    #     @app.callback(
-    #         Output(self.output_container_id, "children"),
-    #         Input(self.component_id, "value")
-    #     )
-    #     def update_output(selected_cities):
-    #         if selected_cities:
-    #             print(f"Callback triggered! Input value: {selected_cities}") # This will print to the terminal
-    #             return f"Selected Cities for {self.component_id}: {', '.join(selected_cities)}"
-    #         return f"No cities selected for {self.component_id}"

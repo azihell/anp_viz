@@ -1,4 +1,4 @@
-from dash import dcc, html, callback, Input, Output, State
+from dash import dcc, html, callback, Input, Output, State, no_update
 import pandas as pd
 import datetime as dt
 import plotly.express as px
@@ -11,6 +11,7 @@ class Crossfilter:
         """
         Recalculates the dataset and possible selections according to all filters selected by listening to all selection callbacks
         """
+        self.data_load = data_load()
         self.all_municipio_list = data_load().loc[:, "Municipio"].unique().tolist()
         self.all_ano_list = data_load().loc[:, "Ano"].unique().tolist()
         self.all_produto_list = data_load().loc[:, "Produto"].unique().tolist()
@@ -44,13 +45,12 @@ class Crossfilter:
             ano_check = data_load().loc[:, "Ano"].isin(current_selection["Ano"])
             municipio_check = data_load().loc[:, "Municipio"].isin(current_selection["Municipio"])
             produto_check = data_load().loc[:, "Produto"].isin(current_selection["Produto"])
-            if current_selection["Municipio"] == [] and current_selection["Produto"] == []: 
+            if current_selection["Municipio"] == [] and current_selection["Produto"] == []:
                 plot_data = data_load()[ano_check]
             else:
                 plot_data = data_load()[municipio_check & ano_check & produto_check]
-
+     
             return plot_data.to_dict(orient='records'), current_selection, full_dataset
-        
 
 
         # Load values of the city dropdown component. They are based on the full city dataset seen on the __init__ function.
@@ -64,89 +64,39 @@ class Crossfilter:
             return self.all_municipio_list, self.all_produto_list
 
         @app.callback(
-            Output("remaining-choices", "data"),
+            Output("city_dropdown", "options"),
+            Output("product_dropdown", "options"),
             Input('filtered-selection', 'data'),
+            Input('all-possible-values', 'data'),
             Input('city_dropdown', 'value'),
+            State('city_dropdown', 'options'),
+            State('product_dropdown', 'options')
         )
-        def get_city_choices(current_filters, 
-                             trigger):
-            df = data_load()
-            product_check = df.loc[:, "Produto"].isin(current_filters["Produto"])
-            year_check = df.loc[:, "Ano"].isin(current_filters["Ano"])
-            filtered_df = df[product_check & year_check]
-            print(filtered_df["Municipio"].unique().tolist())
+        def dropdown_choices(filter_selections, fallback_values, trigger, last_valid_city, last_valid_product):
+ 
+            if filter_selections["Municipio"] == []:
+                return last_valid_city, no_update
+            if filter_selections["Produto"] == []:
+                return no_update, last_valid_product
+ 
+            product_check = self.data_load.loc[:, "Produto"].isin(filter_selections["Produto"])
+            year_check = self.data_load.loc[:, "Ano"].isin(filter_selections["Ano"])
+            filtered_df = self.data_load[product_check & year_check]
+            remaining_cities = filtered_df["Municipio"].unique().tolist()
 
-            # cities_check = df.loc[:, "Produto"].isin(all_possible_values["Produto"])
-            # print(df[cities_check]["Municipio"].unique().tolist()) #["Municipio"].unique().tolist())
-            # combined_mask = pd.Series(True, index=df.index)
-
-
-
-            # all_data = pd.DataFrame.from_dict(full_data)
-            # anos = all_data.loc[:, "Ano"].unique().tolist()
-            # print(anos)
-            # produtos = all_data.loc[:, "Produto"].unique().tolist()
-            # print(produtos)
-            return "A"
-            # Exibir todas as cidades limitadas pelos OUTROS parâmetros de seleção
-
-            # remaining_cities = df.loc[:, "Municipio"].unique().tolist()
-            # print(remaining_cities)
-            # remaining_products = df.loc[:, "Produto"].unique().tolist()
-            # print(remaining_products)
-
+            city_check = self.data_load.loc[:, "Municipio"].isin(filter_selections["Municipio"])
+            year_check = self.data_load.loc[:, "Ano"].isin(filter_selections["Ano"])
+            filtered_df = self.data_load[city_check & year_check]
+            remaining_products = filtered_df["Produto"].unique().tolist()
+            
+            return remaining_cities, remaining_products
 
         @app.callback(
-            Output("fuel_avg", "figure"),
-            Input("filtered-dataset", "data"),
-            )
-        def update_all_time(filter_data):
-            # Data preparation
-            df = pd.DataFrame.from_dict(filter_data)
-            daily_fuel_avg = df.groupby(["Produto","Data da Coleta","Ano","Municipio"])["Valor de Venda"].agg(["mean"]).reset_index()
-            daily_fuel_avg.columns = ["Produto", "Data da Coleta", "Ano", "Municipio", "Valor de Venda medio"]
-            # Figure rendering
-            figure = px.line(
-                daily_fuel_avg,
-                title = "Média diária de preços em todos os postos",
-                x = "Data da Coleta",
-                y = "Valor de Venda medio",
-                color = "Produto",
-                
-            )
-            figure.update_layout(
-                margin = go.layout.Margin(t=50, b=30)
-            )
-            return figure
-
-
-
-            # This must be kept for normality (but bad behavior).
-            # return {"Municipio": selected_municipio_list, "Ano": selected_year_list, "Produto":selected_product_list}, {"Test": "Nothing"}
-            # return {"Municipio": selected_municipio_list, "Ano": selected_year_list, "Produto":selected_product_list}
-
-        # @callback(
-        #     Output("filtered-dataset", "data"),
-        #     Input("filtered-selection", "data"),
-        # )
-        # def main_data_updater(filter_data):
-        #     ano_list = filter_data.get("Ano")
-        #     municipio_list = filter_data.get("Municipio")
-        #     produto_list = filter_data.get("Produto")
-        #     ano_check = data_load().loc[:, "Ano"].isin(ano_list)
-        #     municipio_check = data_load().loc[:, "Municipio"].isin(municipio_list)
-        #     produto_check = data_load().loc[:, "Produto"].isin(produto_list)
-        #     if municipio_list == [] or produto_list == []: 
-        #         plot_data = data_load()[ano_check]
-        #     else:
-        #         plot_data = data_load()[municipio_check & ano_check & produto_check]
-        #     return plot_data.to_dict(orient='records')
-        
-        # @callback(
-        #     Output("product_dropdown", "options"),
-        #     Input("filtered-dataset", "data")
-        # )
-        # def abc(abc):
-        #     df = pd.DataFrame.from_dict(abc)
-        #     sel_prods = df.loc[:, "Produto"].unique().tolist()
-        #     return sel_prods
+            Output('bad-filtering-popup', 'is_open'),
+            Input('filtered-selection', 'data')
+        )
+        def bad_filtering(filter_selections):
+            if filter_selections["Municipio"] == [] or filter_selections["Produto"] == []:
+                return True
+            else:
+                return False

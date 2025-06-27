@@ -7,10 +7,10 @@ from app_data.dfgen import data_load
 # from fuelcomponents import year_slider, city_dropdown
 
 # City list dropdown component object creation
-# cities_list = dfgen.city_overall()["Municipio"].unique().tolist()
+cities_list = dfgen.city_overall()["Municipio"].unique().tolist()
 city_dropdown = MyDropdown(
     component_id="city_dropdown",
-    option_list=[],
+    option_list=cities_list,
     placeholder="Escolha uma cidade:",
     dimension="Municipio"
     )
@@ -18,7 +18,7 @@ city_dropdown = MyDropdown(
 products_list = data_load()["Produto"].unique().tolist()
 product_dropdown = MyDropdown(
     component_id="product_dropdown",
-    option_list=[],
+    option_list=products_list,
     placeholder="Escolha um produto",
     dimension="Produto"
     )
@@ -62,7 +62,7 @@ class MyOffcanvas:
                                 dbc.CardHeader("Cidades"),
                                 dbc.CardBody([
                                     city_dropdown.render(),
-                                    city_dropdown.register_callback()
+                                    # city_dropdown.register_callback()
                                     ])
                                 ], color="secondary", outline=True
                             ),
@@ -70,7 +70,7 @@ class MyOffcanvas:
                                 dbc.CardHeader("Produtos"),
                                 dbc.CardBody([
                                     product_dropdown.render(),
-                                    product_dropdown.register_callback()
+                                    # product_dropdown.register_callback()
                                     ])
                                 ], color="secondary", outline=True
                             ),

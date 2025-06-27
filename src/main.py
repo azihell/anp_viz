@@ -14,7 +14,7 @@ sys.path.append("./scripts/fuelproject_tables")
 # from fuelcomponents import year_slider, offcanvas
 #, all_time_avg, global_filter, navbar, city_avg, city_overview
 import app_components, app_data
-# from app_plots import all_time_avg
+from app_plots import all_time_avg, city_overview
 
 dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.css"
 load_figure_template("SLATE")
@@ -35,14 +35,18 @@ app.layout = dbc.Container(children=[
         data={"Municipio":None, "Ano":None, "Produto":None}
         ),
     dcc.Store(id="all-possible-values",
-              data={"Municipio":None, "Ano":None, "Produto":None}
+        data={"Municipio":None, "Ano":None, "Produto":None}
               ),
     dcc.Store(id="filtered-dataset",
-              data={}
+        data={}
               ),
-    dcc.Store(id="remaining-choices",
-              data={}
-              ),
+    dbc.Modal(
+        children=[
+            dbc.ModalHeader(dbc.ModalTitle("Alerta de seleção")),
+            dbc.ModalBody(dcc.Markdown("Por favor, selecione ao menos uma cidade e um produto para que os gráficos sejam atualizados.")),
+        ],
+        id="bad-filtering-popup", is_open = False, size="sm", centered=True,
+    ),
     # Top navigation bar render method
     navbar_class.render(),
     dbc.Container(
@@ -62,7 +66,7 @@ app.layout = dbc.Container(children=[
             # ], width = 3),
             dbc.Col([
                 dbc.Card([
-                    # dbc.Container(id = "city_summary_table")    # html.Div(id="city_summary_over_year") works too
+                    dbc.Container(id = "city_summary_table")    
                 ], color="secondary", outline=True)
             ], width = 6),
             dbc.Col([
