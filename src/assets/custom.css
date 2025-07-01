@@ -1,0 +1,16 @@
+/* .Select--multi > .Select-control {
+  display: flex;
+  align-items: center;
+}
+
+.Select--multi .Select-multi-value-wrapper {
+  flex: 1;
+  white-space: nowrap;
+  overflow-x: scroll;
+  overflow-y: auto;
+  box-shadow: inset -7px 0 9px -7px rgb(187 187 187);
+}
+
+.Select-multi-value-wrapper::-webkit-scrollbar {
+  display: none;
+} */

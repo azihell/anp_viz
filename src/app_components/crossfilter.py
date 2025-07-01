@@ -67,13 +67,10 @@ class Crossfilter:
             Output("city_dropdown", "options"),
             Output("product_dropdown", "options"),
             Input('filtered-selection', 'data'),
-            Input('all-possible-values', 'data'),
-            Input('city_dropdown', 'value'),
             State('city_dropdown', 'options'),
             State('product_dropdown', 'options')
         )
-        def dropdown_choices(filter_selections, fallback_values, trigger, last_valid_city, last_valid_product):
- 
+        def dropdown_choices(filter_selections, last_valid_city, last_valid_product):
             if filter_selections["Municipio"] == []:
                 return last_valid_city, no_update
             if filter_selections["Produto"] == []:

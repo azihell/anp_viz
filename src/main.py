@@ -1,9 +1,7 @@
 from dash import Dash, dcc #, dash_table, callback, Input, Output
 import dash_bootstrap_components as dbc
 from dash_bootstrap_templates import load_figure_template
-
 import app_components, app_data, app_plots
-# from app_plots import all_time_avg, city_overview
 
 dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.css"
 load_figure_template("SLATE")
@@ -15,8 +13,12 @@ app = Dash(__name__, external_stylesheets=[theme, dbc_css, dbc.icons.FONT_AWESOM
 navbar_class = app_components.MyNavbar("top_bar", None)
 navbar_class.register_callbacks(app)
 
+# Cross-filter class to ensure robustness among parameters available to the user
 filters = app_components.Crossfilter()
 filters.register_callback(app)
+
+# KPI that counts gas stations 
+stations_kpi = app_components.StationsKPI("station_kpi")
 
 app.layout = dbc.Container(children=[
     dcc.Location(id='url', refresh=False),
@@ -42,6 +44,27 @@ app.layout = dbc.Container(children=[
         # className="dbc",    # Uncomment to enable DataTable to be styled according to the theme selected. But loses "style_as_list_view" : True," property while at it.
         style={"max-width": "100%", "padding": "50px", "position":"relative", "top":"20px"},
         children = [
+        dbc.Row([
+            dbc.Col([
+                dbc.Card([
+                    dbc.CardHeader("Número de Postos"),
+                        dbc.CardBody([
+                            dcc.Loading(
+                                id="kpi-loading",
+                                type="graph",
+                                children=[
+                                    dcc.Graph(
+                                        id = "station_kpi",
+                                        config={'displayModeBar': False}
+                                    ) 
+                                ]
+                            )
+                        ]),
+                        app_components.StationsKPI("station_kpi").register_callback(app),
+                    ], color="secondary", outline=True
+                ),
+            ], width = 3),
+        ], className="mb-4"),
         dbc.Row([
             dbc.Col([
                 dbc.Card(children=[dcc.Graph(id = "fuel_avg")],
@@ -74,4 +97,4 @@ app.layout = dbc.Container(children=[
 ], fluid=True)
 
 if __name__ == "__main__":
-  app.run(debug=True, port=8060)
+  app.run(debug=False, port=8090)
