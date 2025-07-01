@@ -2,3 +2,4 @@ from app_components.dropdown import MyDropdown
 from app_components.navbar import MyNavbar
 from app_components.slider import MyRangeSlider
 from app_components.crossfilter import Crossfilter
+from app_components.station_kpi import StationsKPI

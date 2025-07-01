@@ -48,28 +48,34 @@ class MyOffcanvas:
                 dbc.Offcanvas(
                     children=[
                         dbc.Container([
-                            dbc.Card([
-                                dbc.CardHeader("Anos"),
-                                dbc.CardBody([
-                                    year_slider.render()
-                                    ])
-                                ], color="secondary", outline=True
+                            dbc.Row(
+                                dbc.Card([
+                                    dbc.CardHeader("Anos"),
+                                    dbc.CardBody([
+                                        year_slider.render()
+                                        ])
+                                    ], color="secondary", outline=True
+                                ), className="mb-2"
                             ),
-                            dbc.Card([
-                                dbc.CardHeader("Cidades"),
-                                dbc.CardBody([
-                                    city_dropdown.render(),
-                                    ])
-                                ], color="secondary", outline=True
+                            dbc.Row(
+                                dbc.Card([
+                                    dbc.CardHeader("Cidades"),
+                                    dbc.CardBody([
+                                        city_dropdown.render(),
+                                        ])
+                                    ], color="secondary", outline=True
+                                ), className="mb-2"
                             ),
-                            dbc.Card([
-                                dbc.CardHeader("Produtos"),
-                                dbc.CardBody([
-                                    product_dropdown.render(),
-                                    ])
-                                ], color="secondary", outline=True
+                            dbc.Row(
+                                dbc.Card([
+                                    dbc.CardHeader("Produtos"),
+                                    dbc.CardBody([
+                                        product_dropdown.render(),
+                                        ])
+                                    ], color="secondary", outline=True
+                                ),
                             ),
-                        ]),
+                         ]),
                     ],
                     id=self.component_id,
                     scrollable=True,
@@ -77,7 +83,6 @@ class MyOffcanvas:
                     is_open=False,
                     keyboard=True,
                     close_button=False,
-                    class_name="g-2"
                 ),
             ]
         )
