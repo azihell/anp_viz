@@ -25,7 +25,7 @@ class StationsKPI:
             kpi_figure = go.Figure(
                 go.Indicator(
                     mode="number+delta",  # Show both the number and the delta
-                    value=earliest_unique_count,
+                    value=latest_unique_count,
                     number={
                         "prefix": "Ano final: ",
                         "valueformat": ".0f",  # Format as currency with comma separators
@@ -33,7 +33,7 @@ class StationsKPI:
                         },
                     delta={
                         "prefix": " Ano inicial: ",
-                        "reference": latest_unique_count,
+                        "reference": earliest_unique_count,
                         "valueformat": ".2%",
                         "relative": True,  # Show absolute change, not percentage
                         "position": "bottom", # Position the delta below the number
