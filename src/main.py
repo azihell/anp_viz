@@ -8,6 +8,7 @@ load_figure_template("SLATE")
 theme = dbc.themes.SLATE
 
 app = Dash(__name__, external_stylesheets=[theme, dbc_css, dbc.icons.FONT_AWESOME])
+server = app.server
 
 # Top navigation bar object creation:
 navbar_class = app_components.MyNavbar("top_bar", None)
