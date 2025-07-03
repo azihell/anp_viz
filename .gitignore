@@ -210,3 +210,4 @@ gitcmds
 ANP.ipynb
 save_dataset.py
 render_logs.txt
+bad_requirements.txt
