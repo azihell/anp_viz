@@ -3,7 +3,7 @@ import pandas as pd
 import datetime as dt
 import plotly.express as px
 import plotly.graph_objects as go
-from app_data.dfgen import data_load
+from src.app_data.dfgen import data_load
 
 class Crossfilter:
     def __init__(self):
