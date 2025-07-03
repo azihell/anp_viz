@@ -2,7 +2,7 @@ import dash_bootstrap_components as dbc
 from dash import Input, Output, State, html, dcc
 from .dropdown import MyDropdown
 from .slider import MyRangeSlider
-from app_data.dfgen import data_load
+from src.app_data.dfgen import data_load
 
 # City list dropdown component object creation
 cities_list = data_load()["Municipio"].unique().tolist()

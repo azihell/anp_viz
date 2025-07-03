@@ -1,6 +1,6 @@
 from dash import dcc, callback, Output, Input, State, html
 import dash_bootstrap_components as dbc
-from .offcanvas import MyOffcanvas
+from src.app_components.offcanvas import MyOffcanvas
 
 class MyNavbar:
     def __init__(self, component_id, output_container_id):
