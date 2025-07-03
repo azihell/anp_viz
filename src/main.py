@@ -1,6 +1,8 @@
 import os
 import sys
 
+# import src.app_plots
+
 # Get the path to the directory *containing* src (your repository root)
 # This allows Python to find 'src' as a package when you run main.py directly
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -11,7 +13,7 @@ if parent_dir not in sys.path:
 from dash import Dash, dcc #, dash_table, callback, Input, Output
 import dash_bootstrap_components as dbc
 from dash_bootstrap_templates import load_figure_template
-import src.app_components
+import src.app_components, src.app_plots
 
 
 dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.css"
@@ -31,6 +33,10 @@ filters.register_callback(app)
 
 # KPI that counts gas stations 
 stations_kpi = src.app_components.StationsKPI("station_kpi")
+
+# City overview table
+
+city_overview = src.app_plots.CityOverview("city_summary_table")
 
 app.layout = dbc.Container(children=[
     dcc.Location(id='url', refresh=False),
@@ -90,7 +96,8 @@ app.layout = dbc.Container(children=[
             # ], width = 3),
             dbc.Col([
                 dbc.Card([
-                    dbc.Container(id = "city_summary_table")    
+                    dbc.Container(id = "city_summary_table"),
+                    src.app_plots.CityOverview("city_summary_table").register_callback(app),
                 ], color="secondary", outline=True)
             ], width = 6),
             dbc.Col([
@@ -109,4 +116,4 @@ app.layout = dbc.Container(children=[
 ], fluid=True)
 
 if __name__ == "__main__":
-  app.run(debug=False, port=8090)
+  app.run(debug=True, port=8090)

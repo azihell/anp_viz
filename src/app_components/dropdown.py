@@ -31,8 +31,8 @@ class MyDropdown:
                     maxHeight=150,
                     className="fixed-height-multiselect-dropdown"
                 )
-    def register_callback(self):
-        @callback(
+    def register_callback(self, app):
+        @app.callback(
             Output(self.component_id, "options"),
             Input("filtered-selection", "data"),
             Input("all-possible-values", "data"),
