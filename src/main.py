@@ -1,7 +1,17 @@
+import os
+import sys
+
+# Get the path to the directory *containing* src (your repository root)
+# This allows Python to find 'src' as a package when you run main.py directly
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+if parent_dir not in sys.path:
+    sys.path.insert(0, parent_dir)
+
 from dash import Dash, dcc #, dash_table, callback, Input, Output
 import dash_bootstrap_components as dbc
 from dash_bootstrap_templates import load_figure_template
-import src.app_components, src.app_data, src.app_plots
+import src.app_components
 
 
 dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.css"
@@ -12,15 +22,15 @@ app = Dash(__name__, external_stylesheets=[theme, dbc_css, dbc.icons.FONT_AWESOM
 server = app.server
 
 # Top navigation bar object creation:
-navbar_class = app_components.MyNavbar("top_bar", None)
+navbar_class = src.app_components.MyNavbar("top_bar", None)
 navbar_class.register_callbacks(app)
 
 # Cross-filter class to ensure robustness among parameters available to the user
-filters = app_components.Crossfilter()
+filters = src.app_components.Crossfilter()
 filters.register_callback(app)
 
 # KPI that counts gas stations 
-stations_kpi = app_components.StationsKPI("station_kpi")
+stations_kpi = src.app_components.StationsKPI("station_kpi")
 
 app.layout = dbc.Container(children=[
     dcc.Location(id='url', refresh=False),
@@ -62,7 +72,7 @@ app.layout = dbc.Container(children=[
                                 ]
                             )
                         ]),
-                        app_components.StationsKPI("station_kpi").register_callback(app),
+                        src.app_components.StationsKPI("station_kpi").register_callback(app),
                     ], color="secondary", outline=True
                 ),
             ], width = 3),
