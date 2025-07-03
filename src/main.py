@@ -1,7 +1,7 @@
 from dash import Dash, dcc #, dash_table, callback, Input, Output
 import dash_bootstrap_components as dbc
 from dash_bootstrap_templates import load_figure_template
-import app_components, app_data, app_plots
+import src.app_components, src.app_data, src.app_plots
 
 
 dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.css"
