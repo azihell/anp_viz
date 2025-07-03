@@ -1,3 +1,4 @@
+gunicorn
 dash==3.0.4
 dash-bootstrap-components==2.0.3
 dash-bootstrap-templates==2.1.0
