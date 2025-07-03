@@ -1,20 +1,19 @@
-import os
-import sys
+from os import path as _os_path
+from sys import path as _sys_path
 
 # import src.app_plots
 
 # Get the path to the directory *containing* src (your repository root)
 # This allows Python to find 'src' as a package when you run main.py directly
-current_dir = os.path.dirname(os.path.abspath(__file__))
-parent_dir = os.path.dirname(current_dir)
-if parent_dir not in sys.path:
-    sys.path.insert(0, parent_dir)
+current_dir = _os_path.dirname(_os_path.abspath(__file__))
+parent_dir = _os_path.dirname(current_dir)
+if parent_dir not in _sys_path:
+    _sys_path.insert(0, parent_dir)
 
-from dash import Dash, dcc #, dash_table, callback, Input, Output
+from dash import Dash, dcc
 import dash_bootstrap_components as dbc
 from dash_bootstrap_templates import load_figure_template
 import src.app_components, src.app_plots
-
 
 dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.css"
 load_figure_template("SLATE")
