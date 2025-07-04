@@ -11,7 +11,7 @@ class Crossfilter:
         """
         Recalculates the dataset and possible selections according to all filters selected by listening to all selection callbacks
         """
-        self.data_load = data_load()
+        # self.data_load = data_load()
         self.all_municipio_list = data_load().loc[:, "Municipio"].unique().tolist()
         self.all_ano_list = data_load().loc[:, "Ano"].unique().tolist()
         self.all_produto_list = data_load().loc[:, "Produto"].unique().tolist()
@@ -42,13 +42,17 @@ class Crossfilter:
                 previous_selection = full_dataset
                 print("ALERT: previous filter state was 'None', so it was fixed")
             
-            ano_check = data_load().loc[:, "Ano"].isin(current_selection["Ano"])
-            municipio_check = data_load().loc[:, "Municipio"].isin(current_selection["Municipio"])
-            produto_check = data_load().loc[:, "Produto"].isin(current_selection["Produto"])
+            DataLoad = data_load()
+
+            ano_check = DataLoad.loc[:, "Ano"].isin(current_selection["Ano"])
+            municipio_check = DataLoad.loc[:, "Municipio"].isin(current_selection["Municipio"])
+            produto_check = DataLoad.loc[:, "Produto"].isin(current_selection["Produto"])
             if current_selection["Municipio"] == [] and current_selection["Produto"] == []:
-                plot_data = data_load()[ano_check]
+                plot_data = DataLoad[ano_check]
+                print(f"Os anos escolhidos para filtragem foram: {plot_data["Ano"].unique()}")
             else:
-                plot_data = data_load()[municipio_check & ano_check & produto_check]
+                plot_data = DataLoad[municipio_check & ano_check & produto_check]
+                print(f"ELSE: Os anos escolhidos para filtragem foram: {plot_data["Ano"].unique()}")
      
             return plot_data.to_dict(orient='records'), current_selection, full_dataset
 
@@ -75,15 +79,16 @@ class Crossfilter:
                 return last_valid_city, no_update
             if filter_selections["Produto"] == []:
                 return no_update, last_valid_product
- 
-            product_check = self.data_load.loc[:, "Produto"].isin(filter_selections["Produto"])
-            year_check = self.data_load.loc[:, "Ano"].isin(filter_selections["Ano"])
-            filtered_df = self.data_load[product_check & year_check]
+
+            dataload = data_load()
+            product_check = dataload.loc[:, "Produto"].isin(filter_selections["Produto"])
+            year_check = dataload.loc[:, "Ano"].isin(filter_selections["Ano"])
+            filtered_df = dataload[product_check & year_check]
             remaining_cities = filtered_df["Municipio"].unique().tolist()
 
-            city_check = self.data_load.loc[:, "Municipio"].isin(filter_selections["Municipio"])
-            year_check = self.data_load.loc[:, "Ano"].isin(filter_selections["Ano"])
-            filtered_df = self.data_load[city_check & year_check]
+            city_check = dataload.loc[:, "Municipio"].isin(filter_selections["Municipio"])
+            year_check = dataload.loc[:, "Ano"].isin(filter_selections["Ano"])
+            filtered_df = dataload[city_check & year_check]
             remaining_products = filtered_df["Produto"].unique().tolist()
             
             return remaining_cities, remaining_products

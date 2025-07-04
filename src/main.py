@@ -34,7 +34,6 @@ filters.register_callback(app)
 stations_kpi = src.app_components.StationsKPI("station_kpi")
 
 # City overview table
-
 city_overview = src.app_plots.CityOverview("city_summary_table")
 
 app.layout = dbc.Container(children=[
@@ -115,4 +114,6 @@ app.layout = dbc.Container(children=[
 ], fluid=True)
 
 if __name__ == "__main__":
-  app.run(debug=False, port=8090)
+  app.run(debug=False, 
+        #   port=8090
+          )

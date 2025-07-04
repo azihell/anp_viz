@@ -1,4 +1,5 @@
 from dash import Input, Output, callback, no_update
+from dash_bootstrap_templates import load_figure_template
 import dash_bootstrap_components as dbc
 import plotly.graph_objects as go
 import pandas as pd
@@ -51,5 +52,6 @@ class StationsKPI:
                         },
                     )
                 )
+                load_figure_template("SLATE")
                 kpi_figure.update_layout(height=100, margin=dict(l=10, r=10, t=10, b=10))
                 return kpi_figure
