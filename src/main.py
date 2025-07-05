@@ -10,7 +10,8 @@ parent_dir = _os_path.dirname(current_dir)
 if parent_dir not in _sys_path:
     _sys_path.insert(0, parent_dir)
 
-from dash import Dash, dcc
+# from dash import Dash, dcc
+from dash_extensions.enrich import DashProxy, ServersideOutputTransform, dcc
 import dash_bootstrap_components as dbc
 from dash_bootstrap_templates import load_figure_template
 import src.app_components, src.app_plots
@@ -19,7 +20,8 @@ dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.cs
 load_figure_template("SLATE")
 theme = dbc.themes.SLATE
 
-app = Dash(__name__, external_stylesheets=[theme, dbc_css, dbc.icons.FONT_AWESOME])
+app = DashProxy(__name__, external_stylesheets=[theme, dbc_css, dbc.icons.FONT_AWESOME], transforms=[ServersideOutputTransform()])
+# app = Dash(__name__, external_stylesheets=[theme, dbc_css, dbc.icons.FONT_AWESOME])
 server = app.server
 
 # Top navigation bar object creation:
@@ -114,6 +116,6 @@ app.layout = dbc.Container(children=[
 ], fluid=True)
 
 if __name__ == "__main__":
-  app.run(debug=False, 
-        #   port=8090
+  app.run(debug=True, 
+          port=8090
           )
