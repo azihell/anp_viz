@@ -50,29 +50,89 @@ class MyOffcanvas:
                         dbc.Container([
                             dbc.Row(
                                 dbc.Card([
-                                    dbc.CardHeader("Anos"),
+                                    dbc.CardHeader(
+                                        dbc.Container(
+                                            children=[
+                                                "Anos",
+                                                dbc.Button(
+                                                    "Todos",
+                                                    id="select-all-years-button", 
+                                                    color="primary",    
+                                                    size="sm",          
+                                                    className="justify-content-md-end"
+                                                )                                            
+                                            ],
+                                            className="d-flex justify-content-between align-items-center"
+                                        ),
+                                    ),
                                     dbc.CardBody([
                                         year_slider.render()
                                         ])
-                                    ], color="secondary", outline=True
+                                    ],
+                                    color="secondary",
+                                    outline=True,
+                                    style={
+                                        "padding": "0rem 0rem",
+                                        "font-size": "0.85em",
+                                    }
                                 ), className="mb-2"
                             ),
                             dbc.Row(
                                 dbc.Card([
-                                    dbc.CardHeader("Cidades"),
+                                    dbc.CardHeader(
+                                        dbc.Container(
+                                            children=[
+                                                "Cidades",
+                                                dbc.Button(
+                                                    "Todos",
+                                                    id="select-all-cities-button", 
+                                                    color="primary",    
+                                                    size="sm",
+                                                    className="justify-content-md-end"
+                                                )                                            
+                                            ],
+                                            className="d-flex justify-content-between align-items-center"
+                                        ),
+                                    ),
                                     dbc.CardBody([
                                         city_dropdown.render(),
                                         ])
-                                    ], color="secondary", outline=True
+                                    ],
+                                    color="secondary",
+                                    outline=True,
+                                    style={
+                                        "padding": "0rem 0rem",
+                                        "font-size": "0.85em",
+                                    }
                                 ), className="mb-2"
                             ),
                             dbc.Row(
                                 dbc.Card([
-                                    dbc.CardHeader("Produtos"),
+                                    dbc.CardHeader(
+                                        dbc.Container(
+                                            children=[
+                                                "Produtos",
+                                                dbc.Button(
+                                                    "Todos",
+                                                    id="select-all-products-button", 
+                                                    color="primary",    
+                                                    size="sm",          
+                                                    className="justify-content-md-end"
+                                                )                                            
+                                            ],
+                                            className="d-flex justify-content-between align-items-center"
+                                        ),
+                                    ),
                                     dbc.CardBody([
                                         product_dropdown.render(),
                                         ])
-                                    ], color="secondary", outline=True
+                                    ],
+                                    color="secondary",
+                                    outline=True,
+                                    style={
+                                        "padding": "0rem 0rem",
+                                        "font-size": "0.85em",
+                                    }
                                 ),
                             ),
                          ]),
