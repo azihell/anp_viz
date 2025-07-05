@@ -1,4 +1,5 @@
 from dash import callback, Input, Output, State, no_update
+from dash_extensions.enrich import Serverside
 import pandas as pd
 import datetime as dt
 import plotly.express as px
@@ -12,9 +13,10 @@ class Crossfilter:
         Recalculates the dataset and possible selections according to all filters selected by listening to all selection callbacks
         """
         # self.data_load = data_load()
-        self.all_municipio_list = data_load().loc[:, "Municipio"].unique().tolist()
-        self.all_ano_list = data_load().loc[:, "Ano"].unique().tolist()
-        self.all_produto_list = data_load().loc[:, "Produto"].unique().tolist()
+        DataLoad = data_load()
+        self.all_municipio_list = DataLoad.loc[:, "Municipio"].unique().tolist()
+        self.all_ano_list = DataLoad.loc[:, "Ano"].unique().tolist()
+        self.all_produto_list = DataLoad.loc[:, "Produto"].unique().tolist()
 
     def register_callback(self, app):
 
@@ -47,14 +49,9 @@ class Crossfilter:
             ano_check = DataLoad.loc[:, "Ano"].isin(current_selection["Ano"])
             municipio_check = DataLoad.loc[:, "Municipio"].isin(current_selection["Municipio"])
             produto_check = DataLoad.loc[:, "Produto"].isin(current_selection["Produto"])
-            if current_selection["Municipio"] == [] and current_selection["Produto"] == []:
-                plot_data = DataLoad[ano_check]
-                print(f"Os anos escolhidos para filtragem foram: {plot_data["Ano"].unique()}")
-            else:
-                plot_data = DataLoad[municipio_check & ano_check & produto_check]
-                print(f"ELSE: Os anos escolhidos para filtragem foram: {plot_data["Ano"].unique()}")
      
-            return plot_data.to_dict(orient='records'), current_selection, full_dataset
+            return Serverside(DataLoad[municipio_check & ano_check & produto_check]), current_selection, full_dataset
+            # return DataLoad[municipio_check & ano_check & produto_check].to_dict(orient='records'), current_selection, full_dataset
 
 
         # Load values of the city dropdown component. They are based on the full city dataset seen on the __init__ function.
@@ -63,7 +60,6 @@ class Crossfilter:
             Output('product_dropdown', 'value'),
             Input('url', 'pathname'),
         )
-
         def starting_vals(url):
             return self.all_municipio_list, self.all_produto_list
 
