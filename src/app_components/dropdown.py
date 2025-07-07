@@ -53,4 +53,4 @@ class MyDropdown:
                     "label": html.Span([item], style=style_absent_values),
                     "value": item,
                 })
-            return dropdown_options
+            return dropdown_options.sort()

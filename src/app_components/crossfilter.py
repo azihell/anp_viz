@@ -12,7 +12,6 @@ class Crossfilter:
         """
         Recalculates the dataset and possible selections according to all filters selected by listening to all selection callbacks
         """
-        # self.data_load = data_load()
         DataLoad = data_load()
         self.all_municipio_list = DataLoad.loc[:, "Municipio"].unique().tolist()
         self.all_ano_list = DataLoad.loc[:, "Ano"].unique().tolist()
@@ -46,7 +45,7 @@ class Crossfilter:
             
             DataLoad = data_load()
 
-            ano_check = DataLoad.loc[:, "Ano"].isin(current_selection["Ano"])
+            ano_check = DataLoad.loc[:, "Ano"].isin(list(range(current_selection["Ano"][0], current_selection["Ano"][1]+1)))
             municipio_check = DataLoad.loc[:, "Municipio"].isin(current_selection["Municipio"])
             produto_check = DataLoad.loc[:, "Produto"].isin(current_selection["Produto"])
      
