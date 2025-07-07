@@ -52,10 +52,8 @@ class CityOverview():
                                 "fontFamily": "Verdana"},
                 }
 
-                df = pd.DataFrame.from_dict(filtered_data)
-                city_overall = df
+                city_overall = pd.DataFrame(filtered_data)
                 city_overall = city_overall.groupby(["Municipio","Ano","Produto"]).agg({"Revenda":"nunique", "Valor de Venda":["min","max"]}).reset_index()
-
                 new_column_names = []
 
                 # Fixes the multilevel column generated when "Valor de Venda" was aggregated by "min" and "max" at the same time.
@@ -65,6 +63,7 @@ class CityOverview():
                     new_column_names.append(new_col_name)
                 city_overall.columns = new_column_names
                 city_overall.columns = ['Municipio', 'Ano', 'Produto', 'Numero de Revendas', 'Valor de Venda (min)', 'Valor de Venda (max)']
+                city_overall = city_overall.reindex(columns = ['Municipio', 'Produto', 'Ano', 'Numero de Revendas', 'Valor de Venda (min)', 'Valor de Venda (max)'])
 
                 table = dash_table.DataTable(
                     id="city_summary",
