@@ -37,6 +37,7 @@ stations_kpi = src.app_components.StationsKPI("station_kpi")
 
 # City overview table
 city_overview = src.app_plots.CityOverview("city_summary_table")
+tst_alltime_avg = src.app_plots.AllTimeAvg("fuel_avg")
 
 app.layout = dbc.Container(children=[
     dcc.Location(id='url', refresh=False),
@@ -44,7 +45,9 @@ app.layout = dbc.Container(children=[
         data={"Municipio":None, "Ano":None, "Produto":None}
         ),
     dcc.Store(id="all-possible-values",
-        data={"Municipio":None, "Ano":None, "Produto":None}
+        data={"Municipio":None,
+              "Ano":None,
+              "Produto":None}
               ),
     dcc.Store(id="filtered-dataset",
         data={}
@@ -85,33 +88,20 @@ app.layout = dbc.Container(children=[
         ], className="mb-4"),
         dbc.Row([
             dbc.Col([
-                dbc.Card(children=[dcc.Graph(id = "fuel_avg")],
-                         color="secondary", outline=True
-                    )
+                dbc.Card([
+                    dbc.Container(
+                       dcc.Graph(id="fuel_avg"),
+                    ),
+                    src.app_plots.AllTimeAvg("fuel_avg").register_callback(app)
+                ], color="secondary", outline=True)
             ], width = 6),
-            # dbc.Col([
-            #     dbc.Card(children=[dcc.Graph(id = "city_alltime_avg")],
-            #              color="secondary", outline=True
-            #         )
-            # ], width = 3),
             dbc.Col([
                 dbc.Card([
                     dbc.Container(id = "city_summary_table"),
                     src.app_plots.CityOverview("city_summary_table").register_callback(app),
                 ], color="secondary", outline=True)
             ], width = 6),
-            dbc.Col([
-                dbc.Card([
-                    
-                ], color="secondary", outline=True)
-            ], width = 6),
         ]),
-
-        # dbc.Row([
-        #     dbc.Col([
-
-        #     ])
-        # ])
     ]),
 ], fluid=True)
 

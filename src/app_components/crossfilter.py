@@ -26,20 +26,20 @@ class Crossfilter:
         @app.callback(
             Output('filtered-dataset', 'data'),
             Output('filtered-selection', 'data'),
-            Output('all-possible-values', 'data'),
             Input('city_dropdown', 'value'),
             Input('year_slider_class', 'value'),
             Input("product_dropdown", "value"),
-            State('filtered-selection', 'data')
+            State('filtered-selection', 'data'),
+            Input('all-possible-values', 'data'),
         )
-        def current_filter_selection(city, year, product, previous_selection):
+        def current_filter_selection(city, year, product, previous_selection, full_dataset):
             """
             Watches all available inputs and saves the selections in memory.
             """
-            full_dataset = {"Municipio": self.all_municipio_list, "Ano": self.all_ano_list, "Produto": self.all_produto_list}
             current_selection = {"Municipio": city, "Ano": year, "Produto": product}
             # Internally patches previous state in case it initializes with "Null"
             if all(value is None for value in previous_selection.values()):
+                full_dataset = {"Municipio": self.all_municipio_list, "Ano": self.all_ano_list, "Produto": self.all_produto_list}
                 previous_selection = full_dataset
                 print("ALERT: previous filter state was 'None', so it was fixed")
             
@@ -48,19 +48,19 @@ class Crossfilter:
             ano_check = DataLoad.loc[:, "Ano"].isin(list(range(current_selection["Ano"][0], current_selection["Ano"][1]+1)))
             municipio_check = DataLoad.loc[:, "Municipio"].isin(current_selection["Municipio"])
             produto_check = DataLoad.loc[:, "Produto"].isin(current_selection["Produto"])
-     
-            return Serverside(DataLoad[municipio_check & ano_check & produto_check]), current_selection, full_dataset
-            # return DataLoad[municipio_check & ano_check & produto_check].to_dict(orient='records'), current_selection, full_dataset
+            return Serverside(DataLoad[municipio_check & ano_check & produto_check]), current_selection, # full_dataset
 
 
         # Load values of the city dropdown component. They are based on the full city dataset seen on the __init__ function.
         @app.callback(
             Output('city_dropdown', 'value'),
             Output('product_dropdown', 'value'),
+            Output('all-possible-values', 'data'),
             Input('url', 'pathname'),
         )
         def starting_vals(url):
-            return self.all_municipio_list, self.all_produto_list
+            full_dataset = {"Municipio": self.all_municipio_list, "Ano": self.all_ano_list, "Produto": self.all_produto_list}
+            return self.all_municipio_list, self.all_produto_list, full_dataset
 
         @app.callback(
             Output("city_dropdown", "options"),
