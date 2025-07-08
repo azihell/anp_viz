@@ -5,6 +5,7 @@ import datetime as dt
 import plotly.express as px
 import plotly.graph_objects as go
 from src.app_data.dfgen import data_load
+from dash.exceptions import PreventUpdate
 
 class Crossfilter:
     def __init__(self):
@@ -57,10 +58,22 @@ class Crossfilter:
             Output('product_dropdown', 'value'),
             Output('all-possible-values', 'data'),
             Input('url', 'pathname'),
+            Input("select-all-cities-button", "n_clicks"),
+            # Input("select-all-products-button", "n_clicks"),
+            State("city_dropdown", "options"),
+            # State("product_dropdown", "options"),
         )
-        def starting_vals(url):
-            full_dataset = {"Municipio": self.all_municipio_list, "Ano": self.all_ano_list, "Produto": self.all_produto_list}
-            return self.all_municipio_list, self.all_produto_list, full_dataset
+        def starting_vals(url, cities_button, cities_state):
+            if cities_button == None:
+                full_dataset = {"Municipio": self.all_municipio_list, "Ano": self.all_ano_list, "Produto": self.all_produto_list}
+                return self.all_municipio_list, self.all_produto_list, full_dataset
+            else:
+                if cities_button != None:
+                    return cities_state, no_update, no_update
+                # if product_button != None:
+                #     print(product_button)
+                #     return no_update, product_state, no_update
+            
 
         @app.callback(
             Output("city_dropdown", "options"),
@@ -85,7 +98,7 @@ class Crossfilter:
             year_check = dataload.loc[:, "Ano"].isin(filter_selections["Ano"])
             filtered_df = dataload[city_check & year_check]
             remaining_products = filtered_df["Produto"].unique().tolist()
-            
+
             return remaining_cities, remaining_products
 
         @app.callback(

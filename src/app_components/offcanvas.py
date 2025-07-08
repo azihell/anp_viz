@@ -1,7 +1,7 @@
 import dash_bootstrap_components as dbc
 from dash import Input, Output, State, html, dcc
-from .dropdown import MyDropdown
-from .slider import MyRangeSlider
+from src.app_components.dropdown import MyDropdown
+from src.app_components.slider import MyRangeSlider
 from src.app_data.dfgen import data_load
 
 class MyOffcanvas:
@@ -55,7 +55,8 @@ class MyOffcanvas:
                                                     id="select-all-years-button", 
                                                     color="primary",    
                                                     size="sm",          
-                                                    className="justify-content-md-end"
+                                                    className="justify-content-md-end",
+                                                    disabled=True,
                                                 )                                            
                                             ],
                                             className="d-flex justify-content-between align-items-center"
@@ -84,7 +85,7 @@ class MyOffcanvas:
                                                     id="select-all-cities-button", 
                                                     color="primary",    
                                                     size="sm",
-                                                    className="justify-content-md-end"
+                                                    className="justify-content-md-end",
                                                 )                                            
                                             ],
                                             className="d-flex justify-content-between align-items-center"
@@ -113,7 +114,8 @@ class MyOffcanvas:
                                                     id="select-all-products-button", 
                                                     color="primary",    
                                                     size="sm",          
-                                                    className="justify-content-md-end"
+                                                    className="justify-content-md-end",
+                                                    disabled=True,
                                                 )                                            
                                             ],
                                             className="d-flex justify-content-between align-items-center"
@@ -143,3 +145,5 @@ class MyOffcanvas:
             ]
         )
         return offcanvas
+    # def register_callback(self, app):
+
