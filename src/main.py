@@ -12,6 +12,7 @@ if parent_dir not in _sys_path:
 
 # from dash import Dash, dcc
 from dash_extensions.enrich import DashProxy, ServersideOutputTransform, dcc
+import plotly.io as pio
 import dash_bootstrap_components as dbc
 from dash_bootstrap_templates import load_figure_template
 import src.app_components, src.app_plots
