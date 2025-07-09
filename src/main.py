@@ -32,15 +32,11 @@ navbar_class.register_callbacks(app)
 filters = src.app_components.Crossfilter()
 filters.register_callback(app)
 
-# KPI that counts gas stations 
-stations_kpi = src.app_components.StationsKPI("station_kpi")
-
 # City overview table
 city_overview = src.app_plots.CityOverview("city_summary_table")
 tst_alltime_avg = src.app_plots.AllTimeAvg("fuel_avg")
 
 app.layout = dbc.Container(children=[
-   
     dcc.Location(id='url', refresh=False),
     dcc.Store(id='filtered-selection',
         data={"Municipio":None, "Ano":None, "Produto":None}
@@ -70,19 +66,18 @@ app.layout = dbc.Container(children=[
             dbc.Col([
                 dbc.Card([
                     dbc.CardHeader("Número de Postos"),
-                        dbc.CardBody([
-                            dcc.Loading(
-                                id="kpi-loading",
-                                type="graph",
-                                children=[
-                                    dcc.Graph(
-                                        id = "station_kpi",
-                                        config={'displayModeBar': False}
-                                    ) 
-                                ]
-                            )
-                        ]),
-                        src.app_components.StationsKPI("station_kpi").register_callback(app),
+                        dbc.CardBody(
+                            children=[
+                                dcc.Loading(
+                                    id="carregador",
+                                    type="default",
+                                    children=[
+                                        dbc.Container(id="station_count")
+                                    ]
+                                )
+                            ]
+                        ),
+                        src.app_components.StationsKPI("station_count").register_callback(app),
                     ], color="secondary", outline=True
                 ),
             ], width = 3),
