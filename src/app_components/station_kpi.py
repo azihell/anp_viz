@@ -1,11 +1,6 @@
 from dash import Input, Output, callback, no_update, dcc
-from dash_bootstrap_templates import load_figure_template
-# import dash_bootstrap_components as dbc
 import plotly.graph_objects as go
 import pandas as pd
-
-# Sample data for our KPI
-load_figure_template("SLATE")
 
 class StationsKPI:
     def __init__(self, component_id):
@@ -53,7 +48,6 @@ class StationsKPI:
                         },
                     )
                 )
-                load_figure_template("SLATE")
                 kpi_figure.update_layout(height=100, margin=dict(l=10, r=10, t=10, b=10))
                 return dcc.Graph(
                     id="kpi_graph",

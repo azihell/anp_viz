@@ -16,13 +16,13 @@ import dash_bootstrap_components as dbc
 from dash_bootstrap_templates import load_figure_template
 import src.app_components, src.app_plots
 
-dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.css"
-load_figure_template("SLATE")
-theme = dbc.themes.SLATE
+# dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.css"
+# theme = dbc.themes.SLATE
 
-app = DashProxy(__name__, external_stylesheets=[theme, dbc_css, dbc.icons.FONT_AWESOME], transforms=[ServersideOutputTransform()])
+app = DashProxy(__name__, external_stylesheets=[dbc.icons.FONT_AWESOME], transforms=[ServersideOutputTransform()])
 # app = Dash(__name__, external_stylesheets=[theme, dbc_css, dbc.icons.FONT_AWESOME])
 server = app.server
+load_figure_template("SLATE")
 
 # Top navigation bar object creation:
 navbar_class = src.app_components.MyNavbar("top_bar", None)
