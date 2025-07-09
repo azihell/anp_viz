@@ -50,6 +50,9 @@ class Crossfilter:
             municipio_check = DataLoad.loc[:, "Municipio"].isin(current_selection["Municipio"])
             produto_check = DataLoad.loc[:, "Produto"].isin(current_selection["Produto"])
             return Serverside(DataLoad[municipio_check & ano_check & produto_check]), current_selection, # full_dataset
+            
+            # Version of return to be used when using app = Dash(...) instead of app = DashProxy(...)
+            # return (DataLoad[municipio_check & ano_check & produto_check]).to_dict("records"), current_selection, # full_dataset
 
 
         # Load values of the city dropdown component. They are based on the full city dataset seen on the __init__ function.
