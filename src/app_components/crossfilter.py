@@ -32,8 +32,9 @@ class Crossfilter:
             Input("product_dropdown", "value"),
             State('filtered-selection', 'data'),
             Input('all-possible-values', 'data'),
+            Input('fuel_avg', 'relayoutData'),
         )
-        def current_filter_selection(city, year, product, previous_selection, full_dataset):
+        def current_filter_selection(city, year, product, previous_selection, full_dataset, line_plot_data):
             """
             Watches all available inputs and saves the selections in memory.
             """
@@ -46,9 +47,19 @@ class Crossfilter:
             
             DataLoad = data_load()
 
+                # print(DataLoad["Data da Coleta"].dt.date >= "2025-01-01".date())
+                
             ano_check = DataLoad.loc[:, "Ano"].isin(list(range(current_selection["Ano"][0], current_selection["Ano"][1]+1)))
             municipio_check = DataLoad.loc[:, "Municipio"].isin(current_selection["Municipio"])
             produto_check = DataLoad.loc[:, "Produto"].isin(current_selection["Produto"])
+            if "xaxis.range[0]" in line_plot_data:
+                print("A date was selected.")
+                start_date = line_plot_data["xaxis.range[0]"]
+                end_date = line_plot_data["xaxis.range[1]"]
+                start_date_check = DataLoad.loc[:, "Data da Coleta"] >= start_date
+                end_date_check = DataLoad.loc[:, "Data da Coleta"] <= end_date
+                print(DataLoad[start_date_check & end_date_check])
+                return Serverside(DataLoad[municipio_check & ano_check & produto_check & start_date_check & end_date_check]), current_selection, # full_dataset
             return Serverside(DataLoad[municipio_check & ano_check & produto_check]), current_selection, # full_dataset
             
             # Version of return to be used when using app = Dash(...) instead of app = DashProxy(...)
@@ -67,12 +78,11 @@ class Crossfilter:
             # State("product_dropdown", "options"),
         )
         def starting_vals(url, cities_button, cities_state):
-            if cities_button == None:
+            if(url):
                 full_dataset = {"Municipio": self.all_municipio_list, "Ano": self.all_ano_list, "Produto": self.all_produto_list}
                 return self.all_municipio_list, self.all_produto_list, full_dataset
-            else:
-                if cities_button != None:
-                    return cities_state, no_update, no_update
+            if cities_button != None:
+                return cities_state, no_update, no_update
                 # if product_button != None:
                 #     print(product_button)
                 #     return no_update, product_state, no_update

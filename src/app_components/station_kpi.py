@@ -1,8 +1,10 @@
 from dash import Input, Output, callback, no_update, dcc
+from dash_bootstrap_templates import load_figure_template
 import plotly.io as pio
 import plotly.graph_objects as go
 import pandas as pd
 
+load_figure_template("SLATE")
 class StationsKPI:
     def __init__(self, component_id):
         self.component_id = component_id
