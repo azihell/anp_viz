@@ -18,6 +18,7 @@ from dash_bootstrap_templates import load_figure_template
 import src.app_components, src.app_plots
 
 load_figure_template("SLATE")
+
 # dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.css"
 theme = dbc.themes.SLATE
 
@@ -79,9 +80,10 @@ app.layout = dbc.Container(children=[
                             ]
                         ),
                         src.app_components.StationsKPI("station_count").register_callback(app),
-                    ], color="secondary", outline=True
+                    ], color="secondary", outline=True, id="stations_header"
                 ),
-            ], width = 3),
+                dbc.Tooltip("O valor na segunda linha mostra o aumento (verde) ou redução (vermelho) do número de postos do 'Ano final' em comparação ao 'Ano inicial'", target="stations_header"),
+            ], width = 2),
         ], className="mb-4"),
         dbc.Row([
             dbc.Col([
@@ -89,6 +91,7 @@ app.layout = dbc.Container(children=[
                     dbc.Container(
                        dcc.Graph(id="fuel_avg"),
                     ),
+                    dbc.Tooltip("Clique e arraste no gráfico para selecionar uma faixa de tempo que também funcionará como filtro.", target="fuel_avg"),
                     src.app_plots.AllTimeAvg("fuel_avg").register_callback(app)
                 ], color="secondary", outline=True)
             ], width = 6),
