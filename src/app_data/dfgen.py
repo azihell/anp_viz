@@ -37,8 +37,8 @@ def data_transform():
 
     return anp_data_BA_parquet
 
-if __name__ == "__main__":
-    data_transform()
+# if __name__ == "__main__":
+#     data_transform()
 
 # def city_overall():
 #     """
