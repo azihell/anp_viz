@@ -52,15 +52,16 @@ class Crossfilter:
             ano_check = DataLoad.loc[:, "Ano"].isin(list(range(current_selection["Ano"][0], current_selection["Ano"][1]+1)))
             municipio_check = DataLoad.loc[:, "Municipio"].isin(current_selection["Municipio"])
             produto_check = DataLoad.loc[:, "Produto"].isin(current_selection["Produto"])
-            if "xaxis.range[0]" in line_plot_data:
-                print("A date was selected.")
-                start_date = line_plot_data["xaxis.range[0]"]
-                end_date = line_plot_data["xaxis.range[1]"]
-                start_date_check = DataLoad.loc[:, "Data da Coleta"] >= start_date
-                end_date_check = DataLoad.loc[:, "Data da Coleta"] <= end_date
-                print(DataLoad[start_date_check & end_date_check])
-                return Serverside(DataLoad[municipio_check & ano_check & produto_check & start_date_check & end_date_check]), current_selection, # full_dataset
-            return Serverside(DataLoad[municipio_check & ano_check & produto_check]), current_selection, # full_dataset
+            if line_plot_data is not None:
+                if "xaxis.range[0]" in line_plot_data:
+                    print("A date was selected.")
+                    start_date = line_plot_data["xaxis.range[0]"]
+                    end_date = line_plot_data["xaxis.range[1]"]
+                    start_date_check = DataLoad.loc[:, "Data da Coleta"] >= start_date
+                    end_date_check = DataLoad.loc[:, "Data da Coleta"] <= end_date
+                    print(DataLoad[start_date_check & end_date_check])
+                    return Serverside(DataLoad[municipio_check & ano_check & produto_check & start_date_check & end_date_check]), current_selection
+            return Serverside(DataLoad[municipio_check & ano_check & produto_check]), current_selection
             
             # Version of return to be used when using app = Dash(...) instead of app = DashProxy(...)
             # return (DataLoad[municipio_check & ano_check & produto_check]).to_dict("records"), current_selection, # full_dataset
