@@ -3,7 +3,8 @@ import numpy as np
 import datetime as dt
 
 def data_load():
-    return pd.read_parquet(path="./data/2019_onwards.parquet")
+    # return pd.read_parquet(path="./data/2019_onwards.parquet")
+    return pd.read_csv("./data/2019_onwards.csv", parse_dates=["Data da Coleta"])
 
 def data_transform():
     """
@@ -33,9 +34,11 @@ def data_transform():
     is_Bahia = anp_data_NE["Estado"]=="BA"
     isnt_GLP = anp_data_NE["Produto"]!="GLP"
     after_2019 = anp_data_NE["Data da Coleta"]>="2019-01-01"
-    anp_data_BA_parquet = anp_data_NE[is_Bahia & isnt_GLP & after_2019].to_parquet(path="./data/2019_onwards.parquet")
+    anp_data_BA = anp_data_NE[is_Bahia & isnt_GLP & after_2019]
 
-    return anp_data_BA_parquet
+    return anp_data_BA.to_csv(path_or_buf="./data/2019_onwards.csv", index=None)
+    # return anp_data_BA.to_parquet(path="./data/2019_onwards.parquet")
+    
 
 # if __name__ == "__main__":
 #     data_transform()
