@@ -17,7 +17,7 @@ import dash_bootstrap_components as dbc
 from dash_bootstrap_templates import load_figure_template
 import src.app_components, src.app_plots
 
-load_figure_template("SLATE")
+load_figure_template("slate")
 
 # dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.css"
 theme = dbc.themes.SLATE
