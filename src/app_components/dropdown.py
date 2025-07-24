@@ -31,26 +31,26 @@ class MyDropdown:
                     maxHeight=150,
                     className="fixed-height-multiselect-dropdown"
                 )
-    def register_callback(self, app):
-        @app.callback(
-            Output(self.component_id, "options"),
-            Input("filtered-selection", "data"),
-            Input("all-possible-values", "data"),
-            Input("remaining-choices", "data")
-        )
-        def cbk_function(filtered_selection, all_possible, remains):
-            unselected_cities = (list(set(all_possible[self.dimension])-set(filtered_selection[self.dimension])))
-            style_present_values = {'color': 'Black', 'font-size': 12}
-            style_absent_values = {'color': 'Red', 'font-size': 12}
-            dropdown_options = []
-            for item in filtered_selection[self.dimension]:
-                dropdown_options.append({
-                    "label": html.Span([item], style=style_present_values),
-                    "value": item,
-                })
-            for item in (list(set(all_possible[self.dimension])-set(filtered_selection[self.dimension]))):
-                dropdown_options.append({
-                    "label": html.Span([item], style=style_absent_values),
-                    "value": item,
-                })
-            return dropdown_options.sort()
+    # def register_callback(self, app):
+    #     @app.callback(
+    #         Output(self.component_id, "options"),
+    #         Input("filtered-selection", "data"),
+    #         Input("all-possible-values", "data"),
+    #         Input("remaining-choices", "data")
+    #     )
+    #     def cbk_function(filtered_selection, all_possible, remains):
+    #         unselected_cities = (list(set(all_possible[self.dimension])-set(filtered_selection[self.dimension])))
+    #         style_present_values = {'color': 'Black', 'font-size': 12}
+    #         style_absent_values = {'color': 'Red', 'font-size': 12}
+    #         dropdown_options = []
+    #         for item in filtered_selection[self.dimension]:
+    #             dropdown_options.append({
+    #                 "label": html.Span([item], style=style_present_values),
+    #                 "value": item,
+    #             })
+    #         for item in (list(set(all_possible[self.dimension])-set(filtered_selection[self.dimension]))):
+    #             dropdown_options.append({
+    #                 "label": html.Span([item], style=style_absent_values),
+    #                 "value": item,
+    #             })
+    #         return dropdown_options.sort()

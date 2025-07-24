@@ -12,7 +12,7 @@ class MyOffcanvas:
         self.component_id = component_id
         # City list dropdown component object creation
         self.city_dropdown = MyDropdown(
-            component_id="city_dropdown",
+            component_id="city-dropdown",
             option_list=data_load()["Municipio"].unique().tolist(),
             placeholder="Escolha uma cidade:",
             dimension="Municipio"
@@ -31,7 +31,7 @@ class MyOffcanvas:
         minYear = marks_list[0]
         maxYear = marks_list[-1]
         default_values = [minYear, maxYear]
-        self.year_slider = MyRangeSlider("year_slider_class", minYear, maxYear, marks, default_values)
+        self.year_slider = MyRangeSlider("year-slider-class", minYear, maxYear, marks, default_values)
     def render(self):
         """
         Renders a dbc.Offcanvas component within a dbc.Container

@@ -10,7 +10,7 @@ class AllTimeAvg():
 
     def register_callback(self, app):
         @app.callback(
-            Output("fuel_avg", "figure"),
+            Output("fuel-avg", "figure"),
             Input("filtered-dataset", "data"),
             Input('filtered-selection', 'data'),
             )

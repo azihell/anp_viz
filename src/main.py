@@ -36,7 +36,6 @@ filters.register_callback(app)
 
 # City overview table
 city_overview = src.app_plots.CityOverview("city_summary_table")
-tst_alltime_avg = src.app_plots.AllTimeAvg("fuel_avg")
 
 app.layout = dbc.Container(children=[
     dcc.Store(id='store-first-load-flag', data=None),
@@ -89,10 +88,10 @@ app.layout = dbc.Container(children=[
             dbc.Col([
                 dbc.Card([
                     dbc.Container(
-                       dcc.Graph(id="fuel_avg"),
+                       dcc.Graph(id="fuel-avg"),
                     ),
-                    dbc.Tooltip("Clique e arraste no gráfico para selecionar uma faixa de tempo que também funcionará como filtro.", target="fuel_avg"),
-                    src.app_plots.AllTimeAvg("fuel_avg").register_callback(app)
+                    dbc.Tooltip("Clique e arraste no gráfico para selecionar uma faixa de tempo que também funcionará como filtro.", target="fuel-avg"),
+                    src.app_plots.AllTimeAvg("fuel-avg").register_callback(app)
                 ], color="secondary", outline=True)
             ], width = 6),
             dbc.Col([
