@@ -52,7 +52,6 @@ class StationsKPI:
                     )
                 )
                 kpi_figure.update_layout(height=100, margin=dict(l=10, r=10, t=10, b=10))
-                print(f"DEBUG: Global default template at figure creation time: {pio.templates.default}")
                 return dcc.Graph(
                     id="kpi_graph",
                     figure=kpi_figure,

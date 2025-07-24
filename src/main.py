@@ -39,7 +39,7 @@ city_overview = src.app_plots.CityOverview("city_summary_table")
 tst_alltime_avg = src.app_plots.AllTimeAvg("fuel_avg")
 
 app.layout = dbc.Container(children=[
-    dcc.Location(id='url', refresh=False),
+    dcc.Store(id='store-first-load-flag', data=None),
     dcc.Store(id='filtered-selection',
         data={"Municipio":None, "Ano":None, "Produto":None}
         ),
@@ -106,6 +106,6 @@ app.layout = dbc.Container(children=[
 ], fluid=True)
 
 if __name__ == "__main__":
-  app.run(debug=False, 
+  app.run(debug=True, 
             port=8090
          )
