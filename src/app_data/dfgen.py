@@ -3,6 +3,10 @@ import numpy as np
 import datetime as dt
 
 def data_load():
+    # return pd.read_parquet(path="./data/2019_onwards.parquet")
+    return pd.read_csv("./data/2019_onwards.csv", parse_dates=["Data da Coleta"])
+
+def data_transform():
     """
     Loads the main dataset (or a sample of it for testing).
     
@@ -19,76 +23,85 @@ def data_load():
     | NE | BA | Feira de Santana | Posto Shell | 02.xxx.xxx/0001-90 | ETANOL | 01-01-2025 | 2.908
     """ 
     # Reduced dataset made of Northeast (NE) retailers only
-    anp_data_NE = pd.read_csv("./data/2019_onwards.csv",
+    anp_data_NE = pd.read_csv("./data/northeast.csv",
                               parse_dates=["Data da Coleta"],
                             #   nrows=100000
                   )
+    anp_data_NE["Data da Coleta"] = anp_data_NE["Data da Coleta"].astype("datetime64[s]")
     anp_data_NE.loc[:, "Municipio"] = anp_data_NE.loc[:, "Municipio"].str.title()
     anp_data_NE.loc[:, "Ano"] = anp_data_NE["Data da Coleta"].dt.year
     # Reduction to Bahia state only AND not cooking gas
     is_Bahia = anp_data_NE["Estado"]=="BA"
     isnt_GLP = anp_data_NE["Produto"]!="GLP"
-    return anp_data_NE[is_Bahia & isnt_GLP]
+    after_2019 = anp_data_NE["Data da Coleta"]>="2019-01-01"
+    anp_data_BA = anp_data_NE[is_Bahia & isnt_GLP & after_2019]
 
-def city_overall():
-    """
-    Summarizes by year the minimum and maximum fuel prices for all cities. Scope is all retailers ("Revenda").
+    return anp_data_BA.to_csv(path_or_buf="./data/2019_onwards.csv", index=None)
+    # return anp_data_BA.to_parquet(path="./data/2019_onwards.parquet")
+    
 
-    Dataframe columns:
+# if __name__ == "__main__":
+#     data_transform()
 
-    | Municipio | Ano | Produto | Numero de Revendas | Valor de Venda (min) | Valor de Venda (max)
-    |---|---|---|---|---|---
-    ALAGOINHAS | 2004 | DIESEL | 9 | 1.220| 1.490
-    Returns:
-        Dataframe.
-    """
-    # City overall info - for table
-    city_overall = data_load()
-    # city_overall.loc[:, "Ano"] = city_overall["Data da Coleta"].dt.year
-    city_overall = city_overall.groupby(["Municipio","Ano","Produto"]).agg({"Revenda":"nunique", "Valor de Venda":["min","max"]}).reset_index()
+# def city_overall():
+#     """
+#     Summarizes by year the minimum and maximum fuel prices for all cities. Scope is all retailers ("Revenda").
 
-    new_column_names = []
+#     Dataframe columns:
 
-    # Fixes the multilevel column generated when "Valor de Venda" was aggregated by "min" and "max" at the same time.
-    for cols in city_overall.columns:
-        # This only works for the top and adjacent level right below it.
-        new_col_name = f'{cols[0]}_{cols[1]}'
-        new_column_names.append(new_col_name)
-    city_overall.columns = new_column_names
-    city_overall.columns = ['Municipio', 'Ano', 'Produto', 'Numero de Revendas', 'Valor de Venda (min)', 'Valor de Venda (max)']
-    return city_overall
+#     | Municipio | Ano | Produto | Numero de Revendas | Valor de Venda (min) | Valor de Venda (max)
+#     |---|---|---|---|---|---
+#     ALAGOINHAS | 2004 | DIESEL | 9 | 1.220| 1.490
+#     Returns:
+#         Dataframe.
+#     """
+#     # City overall info - for table
+#     city_overall = data_load()
+#     # city_overall.loc[:, "Ano"] = city_overall["Data da Coleta"].dt.year
+#     city_overall = city_overall.groupby(["Municipio","Ano","Produto"]).agg({"Revenda":"nunique", "Valor de Venda":["min","max"]}).reset_index()
 
-def daily_average_price():
-    """
-    Generates a time series with average pricing of each fuel type considering all retailers in all cities.
+#     new_column_names = []
 
-    Granularity in days.
+#     # Fixes the multilevel column generated when "Valor de Venda" was aggregated by "min" and "max" at the same time.
+#     for cols in city_overall.columns:
+#         # This only works for the top and adjacent level right below it.
+#         new_col_name = f'{cols[0]}_{cols[1]}'
+#         new_column_names.append(new_col_name)
+#     city_overall.columns = new_column_names
+#     city_overall.columns = ['Municipio', 'Ano', 'Produto', 'Numero de Revendas', 'Valor de Venda (min)', 'Valor de Venda (max)']
+#     return city_overall
 
-    Produto | Data da Coleta | Valor de Venda medio | Ano
-    |---|---|---|---
-    DIESEL  |  2004-05-10    |         1.315086     | 2004
-    """
-    # Daily average for all gas stations, by fuel type
-    daily_fuel_avg = data_load().groupby(["Produto","Data da Coleta","Ano","Municipio"])["Valor de Venda"].agg(["mean"]).reset_index()
-    daily_fuel_avg.columns = ["Produto", "Data da Coleta", "Ano", "Municipio", "Valor de Venda medio"]
-    # daily_fuel_avg.loc[:, "Ano"] = daily_fuel_avg["Data da Coleta"].dt.year
-    return daily_fuel_avg
+# def daily_average_price():
+#     """
+#     Generates a time series with average pricing of each fuel type considering all retailers in all cities.
 
-def all_time_avg():
+#     Granularity in days.
 
-    # Calculates average for every fuel sold in every city
-    city_alltime_avg = data_load().groupby(["Municipio","Produto","Ano"])["Valor de Venda"].agg("mean")
-    city_alltime_avg = city_alltime_avg.reset_index()
+#     Produto | Data da Coleta | Valor de Venda medio | Ano
+#     |---|---|---|---
+#     DIESEL  |  2004-05-10    |         1.315086     | 2004
+#     """
+#     # Daily average for all gas stations, by fuel type
+#     daily_fuel_avg = data_load().groupby(["Produto","Data da Coleta","Ano","Municipio"])["Valor de Venda"].agg(["mean"]).reset_index()
+#     daily_fuel_avg.columns = ["Produto", "Data da Coleta", "Ano", "Municipio", "Valor de Venda medio"]
+#     # daily_fuel_avg.loc[:, "Ano"] = daily_fuel_avg["Data da Coleta"].dt.year
+#     return daily_fuel_avg
 
-    # Calculates maximum of the sum of the average fuel prices for each city.
-    # Then normalizes all averages calculated on "city_alltime_avg" by this maximum value.
-    city_alltime_avg_sum = city_alltime_avg.groupby("Municipio")["Valor de Venda"].agg("sum").reset_index()
-    divisor = city_alltime_avg_sum["Valor de Venda"].max()
-    city_alltime_avg["Normalized"] = city_alltime_avg["Valor de Venda"].apply(lambda x:x/divisor)
+# def all_time_avg():
 
-    # Ordering by the city with the highest overall means
-    city_order = city_alltime_avg_sum.sort_values("Valor de Venda", ascending=False)
-    city_ordered_list = city_order.set_index("Municipio").index
+#     # Calculates average for every fuel sold in every city
+#     city_alltime_avg = data_load().groupby(["Municipio","Produto","Ano"])["Valor de Venda"].agg("mean")
+#     city_alltime_avg = city_alltime_avg.reset_index()
 
-    city_alltime_avg["Municipio"]= pd.Categorical(city_alltime_avg["Municipio"], categories=city_ordered_list)
-    return city_alltime_avg
+#     # Calculates maximum of the sum of the average fuel prices for each city.
+#     # Then normalizes all averages calculated on "city_alltime_avg" by this maximum value.
+#     city_alltime_avg_sum = city_alltime_avg.groupby("Municipio")["Valor de Venda"].agg("sum").reset_index()
+#     divisor = city_alltime_avg_sum["Valor de Venda"].max()
+#     city_alltime_avg["Normalized"] = city_alltime_avg["Valor de Venda"].apply(lambda x:x/divisor)
+
+#     # Ordering by the city with the highest overall means
+#     city_order = city_alltime_avg_sum.sort_values("Valor de Venda", ascending=False)
+#     city_ordered_list = city_order.set_index("Municipio").index
+
+#     city_alltime_avg["Municipio"]= pd.Categorical(city_alltime_avg["Municipio"], categories=city_ordered_list)
+#     return city_alltime_avg

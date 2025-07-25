@@ -1,9 +1,6 @@
 from dash.dcc import RangeSlider #, html, callback, Output, Input, State
 from dash_bootstrap_components import Container
 
-# daily_fuel_avg = dfgen.daily_average_price()
-# minYear = daily_fuel_avg["Data da Coleta"].dt.year.unique().tolist()[0]
-# maxYear = daily_fuel_avg["Data da Coleta"].dt.year.unique().tolist()[-1]
 class MyRangeSlider:
     def __init__(self, component_id, min, max, marks, starting_values):
         """
@@ -40,6 +37,7 @@ class MyRangeSlider:
                 tooltip={"placement": "top",
                             "style": {"color": "White", "fontSize": "12px"},
                 },
-                dots=True
+                dots=True,
+                updatemode="drag"
             )
         return range_slider

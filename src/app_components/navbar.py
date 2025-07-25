@@ -1,6 +1,6 @@
 from dash import dcc, callback, Output, Input, State, html
 import dash_bootstrap_components as dbc
-from .offcanvas import MyOffcanvas
+from src.app_components.offcanvas import MyOffcanvas
 
 class MyNavbar:
     def __init__(self, component_id, output_container_id):
@@ -15,12 +15,12 @@ class MyNavbar:
         self.output_container_id = None
         self.right_side = dbc.Row(
             children=[
-                dbc.Col(dbc.Button("Sobre", color="primary", n_clicks=0, id="open_modal-class",
-                                class_name="g-0 d-flex align-items-center justify-content-center",
-                                style={"border-radius":"8px", "height":"40px", "width":"auto"}
-                        ), style={"border": "none"}
+                dbc.Col(
+                    dbc.Button("Sobre", id="open_modal-class", color="primary", n_clicks=0, 
+                        class_name="g-0 d-flex align-items-center justify-content-center",
+                        style={"border-radius":"8px", "height":"40px", "width":"auto"}
+                    ), style={"border": "none"}, class_name="px-2"
                 ),
-                dbc.Col(dbc.NavItem(dbc.NavLink("Contato", href="mailto:azielfreitas@gmail.com" , style={"border": "none"}))),
                 dbc.Modal(
                     children = [
                         dbc.ModalHeader(dbc.ModalTitle("Sobre essa visualização...")),
@@ -33,21 +33,54 @@ class MyNavbar:
                         ),
                     ], id="credits-popup", is_open=False, 
                 ),
-                dbc.Col(
-                    dbc.DropdownMenu(
-                        children=[
-                            dbc.DropdownMenuItem("More pages", header=True),
-                            dbc.DropdownMenuItem("Page 1", href="/page1"),
-                            dbc.DropdownMenuItem("Page 2", href="/page2"),
-                        ],
-                        toggle_style={"border": "none"},
-                        nav=True,
-                        in_navbar=True,
-                        label="Mais",
-                        align_end=True,
+               dbc.Col(
+                    dbc.Button(
+                        id="open-modal-help", color="secondary", n_clicks=0,
+                        className="d-flex align-items-center justify-content-center",
+                        style={"border-radius":"8px", "height":"40px", "width":"40px"},
+                        children=[html.I(className="fa-solid fa-question-circle")],
+                        outline=False, 
+                        
+                    ), className="ml-2"
+                ),
+                dbc.Modal(
+                    children = [
+                        dbc.ModalHeader(dbc.ModalTitle(dcc.Markdown("__Guia rápido__"), style={'text-align': 'center'})),
+                        dbc.ModalBody(
+                            dcc.Markdown(
+                            """
+                            1. Utilize o __menu sanduíche__ no _topo esquerdo_ para acessar os filtros e personalizar sua visualização;
+                            2. Passe o ponteiro do mouse _sobre itens na tela_ para _obter mais informações_;
+                            3. As colunas das tabelas possuem filtros próprios que _ dependem do conjunto de dados limitado por sua escolha de filtros no passo 1_.
 
+                            *Happy data analysis!*
+                            """
+                            )
+                        ),
+                        # dbc.ModalBody(dcc.Markdown("Passe o ponteiro do mouse sobre os itens na tela para obter mais informações.")),
+                        dbc.ModalFooter(
+                            dbc.Button("Fechar", id="close_modal-help", className="ms-auto", n_clicks=0)
+                        ),
+                    ], id="help-popup", is_open=False, centered=True,
+                    dialog_style={
+                        "max-width": "700px",  # Set the maximum width
+                        "width": "90%",       # Ensure it's responsive for smaller screens (takes 90% of viewport width up to max-width)
+                        "margin-left": "auto",  # Explicitly center horizontally
+                        "margin-right": "auto"  # Explicitly center horizontally
+                    },
+                ),
+
+                # Icone para Contato
+                dbc.Col(
+                    dbc.NavItem(
+                        dbc.NavLink(
+                            html.I(className="fa-solid fa-envelope-open"),
+                            href="mailto:azielfreitas@gmail.com",
+                            style={"border": "none"},
+                            className="text-white"
+                            )
                     )
-                )
+                ),
             ], className="g-0 ms-auto flex-nowrap mt-3 mt-md-0", align="center"
         )
 
@@ -88,7 +121,6 @@ class MyNavbar:
                     className="d-flex align-items-center justify-content-center",
                     ),
                     dbc.NavbarToggler(id="navbar-toggler", n_clicks=0),
-
                     # dbc.DropdownMenu(
                     #     id="navbar-toggler",
                     #     children=[
@@ -112,7 +144,7 @@ class MyNavbar:
                     ),
 
                 # Invokes the customized Offcanvas class
-                MyOffcanvas("offcanvas-scrollable-class").render()
+                MyOffcanvas("offcanvas-scrollable-class").render(),
                 ],
             fluid=True,
             style={"min-height":"50px", "max-height":"50px"}
@@ -144,6 +176,19 @@ class MyNavbar:
                 Input("close_modal-class", "n_clicks")
             ],
             State("credits-popup", "is_open"),
+        )
+        def toggle_modal(n1, n2, is_open):
+            if n1 or n2:
+                return not is_open
+            return is_open
+        
+        @app.callback(
+            Output("help-popup", "is_open"),
+            [
+                Input("open-modal-help", "n_clicks"),
+                Input("close_modal-help", "n_clicks")
+            ],
+            State("help-popup", "is_open"),
         )
         def toggle_modal(n1, n2, is_open):
             if n1 or n2:

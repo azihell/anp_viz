@@ -1,24 +1,28 @@
-import os
-import sys
+from os import path as _os_path
+from sys import path as _sys_path
+
+# import src.app_plots
 
 # Get the path to the directory *containing* src (your repository root)
 # This allows Python to find 'src' as a package when you run main.py directly
-current_dir = os.path.dirname(os.path.abspath(__file__))
-parent_dir = os.path.dirname(current_dir)
-if parent_dir not in sys.path:
-    sys.path.insert(0, parent_dir)
+current_dir = _os_path.dirname(_os_path.abspath(__file__))
+parent_dir = _os_path.dirname(current_dir)
+if parent_dir not in _sys_path:
+    _sys_path.insert(0, parent_dir)
 
-from dash import Dash, dcc #, dash_table, callback, Input, Output
+# from dash import Dash, dcc
+from dash_extensions.enrich import DashProxy, ServersideOutputTransform, dcc
+import plotly.io as pio
 import dash_bootstrap_components as dbc
 from dash_bootstrap_templates import load_figure_template
-import src.app_components
+import src.app_components, src.app_plots
 
+load_figure_template("slate")
 
 dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.css"
-load_figure_template("SLATE")
 theme = dbc.themes.SLATE
 
-app = Dash(__name__, external_stylesheets=[theme, dbc_css, dbc.icons.FONT_AWESOME])
+app = DashProxy(__name__, external_stylesheets=[theme, dbc.icons.FONT_AWESOME, dbc_css], transforms=[ServersideOutputTransform()])
 server = app.server
 
 # Top navigation bar object creation:
@@ -29,16 +33,19 @@ navbar_class.register_callbacks(app)
 filters = src.app_components.Crossfilter()
 filters.register_callback(app)
 
-# KPI that counts gas stations 
-stations_kpi = src.app_components.StationsKPI("station_kpi")
+# City overview table
+city_overview = src.app_plots.CityOverview("city_summary_table")
+tst_alltime_avg = src.app_plots.AllTimeAvg("fuel_avg")
 
 app.layout = dbc.Container(children=[
-    dcc.Location(id='url', refresh=False),
+    dcc.Store(id='store-first-load-flag', data=None),
     dcc.Store(id='filtered-selection',
         data={"Municipio":None, "Ano":None, "Produto":None}
         ),
     dcc.Store(id="all-possible-values",
-        data={"Municipio":None, "Ano":None, "Produto":None}
+        data={"Municipio":None,
+              "Ano":None,
+              "Produto":None}
               ),
     dcc.Store(id="filtered-dataset",
         data={}
@@ -60,53 +67,59 @@ app.layout = dbc.Container(children=[
             dbc.Col([
                 dbc.Card([
                     dbc.CardHeader("Número de Postos"),
-                        dbc.CardBody([
-                            dcc.Loading(
-                                id="kpi-loading",
-                                type="graph",
-                                children=[
-                                    dcc.Graph(
-                                        id = "station_kpi",
-                                        config={'displayModeBar': False}
-                                    ) 
-                                ]
-                            )
-                        ]),
-                        src.app_components.StationsKPI("station_kpi").register_callback(app),
-                    ], color="secondary", outline=True
+                        dbc.CardBody(
+                            children=[
+                                dcc.Loading(
+                                    id="carregador",
+                                    type="default",
+                                    children=[
+                                        dbc.Container(id="station_count")
+                                    ]
+                                )
+                            ]
+                        ),
+                        src.app_components.StationsKPI("station_count").register_callback(app),
+                    ], color="secondary", outline=True, id="stations_header"
                 ),
-            ], width = 3),
+                dbc.Tooltip("O valor na segunda linha mostra o aumento (verde) ou redução (vermelho) do número de postos do 'Ano final' em comparação ao 'Ano inicial'", target="stations_header"),
+            ], width = 2),
         ], className="mb-4"),
         dbc.Row([
             dbc.Col([
-                dbc.Card(children=[dcc.Graph(id = "fuel_avg")],
-                         color="secondary", outline=True
-                    )
-            ], width = 6),
-            # dbc.Col([
-            #     dbc.Card(children=[dcc.Graph(id = "city_alltime_avg")],
-            #              color="secondary", outline=True
-            #         )
-            # ], width = 3),
-            dbc.Col([
                 dbc.Card([
-                    dbc.Container(id = "city_summary_table")    
+                    dbc.Container(
+                        dcc.Loading(
+                            id="line-plot-loader",
+                            type="default",
+                            children=[
+                                dbc.Container(
+                                    dcc.Graph(id="fuel_avg"),
+                                    id="fuel-avg-graph-container",
+                                    style={'display': 'none'}
+                                )
+                            ]
+                        ),
+                    ),
+                    dbc.Tooltip("Clique e arraste no gráfico para selecionar uma faixa de tempo que também funcionará como filtro.", target="fuel_avg"),
+                    src.app_plots.AllTimeAvg("fuel_avg").register_callback(app)
                 ], color="secondary", outline=True)
             ], width = 6),
             dbc.Col([
                 dbc.Card([
-                    
+                    dbc.CardBody(
+                        children = [
+                            dbc.Container(id = "city_summary_table"),
+                            src.app_plots.CityOverview("city_summary_table").register_callback(app),
+                        ],
+                        className="p-0"
+                    )
                 ], color="secondary", outline=True)
             ], width = 6),
         ]),
-
-        # dbc.Row([
-        #     dbc.Col([
-
-        #     ])
-        # ])
     ]),
 ], fluid=True)
 
 if __name__ == "__main__":
-  app.run(debug=False, port=8090)
+  app.run(debug=False, 
+            port=8090
+         )

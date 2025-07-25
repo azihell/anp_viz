@@ -1,34 +1,8 @@
 import dash_bootstrap_components as dbc
 from dash import Input, Output, State, html, dcc
-from .dropdown import MyDropdown
-from .slider import MyRangeSlider
-from app_data.dfgen import data_load
-
-# City list dropdown component object creation
-cities_list = data_load()["Municipio"].unique().tolist()
-city_dropdown = MyDropdown(
-    component_id="city_dropdown",
-    option_list=cities_list,
-    placeholder="Escolha uma cidade:",
-    dimension="Municipio"
-    )
-# Products dropdown
-products_list = data_load()["Produto"].unique().tolist()
-product_dropdown = MyDropdown(
-    component_id="product_dropdown",
-    option_list=products_list,
-    placeholder="Escolha um produto",
-    dimension="Produto"
-    )
-
-# Years range slider creation
-marks_list = data_load()["Data da Coleta"].dt.year.unique().tolist()
-marks = {value: str(value) for value in marks_list}
-minYear = marks_list[0]
-maxYear = marks_list[-1]
-default_values = [minYear, maxYear]
-year_slider = MyRangeSlider("year_slider_class", minYear, maxYear, marks, default_values)
-
+from src.app_components.dropdown import MyDropdown
+from src.app_components.slider import MyRangeSlider
+from src.app_data.dfgen import data_load
 
 class MyOffcanvas:
     def __init__(self, component_id):
@@ -36,6 +10,28 @@ class MyOffcanvas:
         Initializes an Offcanvas component.
         """
         self.component_id = component_id
+        # City list dropdown component object creation
+        self.city_dropdown = MyDropdown(
+            component_id="city_dropdown",
+            option_list=data_load()["Municipio"].unique().tolist(),
+            placeholder="Escolha uma cidade:",
+            dimension="Municipio"
+            )
+        # Products dropdown
+        self.product_dropdown = MyDropdown(
+            component_id="product_dropdown",
+            option_list=data_load()["Produto"].unique().tolist(),
+            placeholder="Escolha um produto",
+            dimension="Produto"
+            )
+
+        # Years range slider creation
+        marks_list = data_load()["Data da Coleta"].dt.year.unique().tolist()
+        marks = {value: str(value) for value in marks_list}
+        minYear = marks_list[0]
+        maxYear = marks_list[-1]
+        default_values = [minYear, maxYear]
+        self.year_slider = MyRangeSlider("year_slider_class", minYear, maxYear, marks, default_values)
     def render(self):
         """
         Renders a dbc.Offcanvas component within a dbc.Container
@@ -50,29 +46,82 @@ class MyOffcanvas:
                         dbc.Container([
                             dbc.Row(
                                 dbc.Card([
-                                    dbc.CardHeader("Anos"),
+                                    dbc.CardHeader(
+                                        dbc.Container(
+                                            children=[
+                                                "Anos",
+                                            ],
+                                            className="d-flex justify-content-between align-items-center"
+                                        ),
+                                    ),
                                     dbc.CardBody([
-                                        year_slider.render()
+                                        self.year_slider.render()
                                         ])
-                                    ], color="secondary", outline=True
+                                    ],
+                                    color="secondary",
+                                    outline=True,
+                                    style={
+                                        "padding": "0rem 0rem",
+                                        "font-size": "0.85em",
+                                    }
                                 ), className="mb-2"
                             ),
                             dbc.Row(
                                 dbc.Card([
-                                    dbc.CardHeader("Cidades"),
+                                    dbc.CardHeader(
+                                        dbc.Container(
+                                            children=[
+                                                "Cidades",
+                                                dbc.Button(
+                                                    "Todos",
+                                                    id="select-all-cities-button", 
+                                                    color="primary",    
+                                                    size="sm",
+                                                    className="justify-content-md-end",
+                                                )                                            
+                                            ],
+                                            className="d-flex justify-content-between align-items-center"
+                                        ),
+                                    ),
                                     dbc.CardBody([
-                                        city_dropdown.render(),
+                                        self.city_dropdown.render(),
                                         ])
-                                    ], color="secondary", outline=True
+                                    ],
+                                    color="secondary",
+                                    outline=True,
+                                    style={
+                                        "padding": "0rem 0rem",
+                                        "font-size": "0.85em",
+                                    }
                                 ), className="mb-2"
                             ),
                             dbc.Row(
                                 dbc.Card([
-                                    dbc.CardHeader("Produtos"),
+                                    dbc.CardHeader(
+                                        dbc.Container(
+                                            children=[
+                                                "Produtos",
+                                                dbc.Button(
+                                                    "Todos",
+                                                    id="select-all-products-button", 
+                                                    color="primary",    
+                                                    size="sm",          
+                                                    className="justify-content-md-end",
+                                                )                                            
+                                            ],
+                                            className="d-flex justify-content-between align-items-center"
+                                        ),
+                                    ),
                                     dbc.CardBody([
-                                        product_dropdown.render(),
+                                        self.product_dropdown.render(),
                                         ])
-                                    ], color="secondary", outline=True
+                                    ],
+                                    color="secondary",
+                                    outline=True,
+                                    style={
+                                        "padding": "0rem 0rem",
+                                        "font-size": "0.85em",
+                                    }
                                 ),
                             ),
                          ]),
@@ -87,3 +136,5 @@ class MyOffcanvas:
             ]
         )
         return offcanvas
+    # def register_callback(self, app):
+

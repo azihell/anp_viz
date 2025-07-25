@@ -29,10 +29,10 @@ class MyDropdown:
                     multi=True,
                     placeholder=self.placeholder,
                     maxHeight=150,
-                    className="fixed-height-multiselect-dropdown"
+                    className="dbc fixed-height-multiselect-dropdown"
                 )
-    def register_callback(self):
-        @callback(
+    def register_callback(self, app):
+        @app.callback(
             Output(self.component_id, "options"),
             Input("filtered-selection", "data"),
             Input("all-possible-values", "data"),
@@ -53,4 +53,4 @@ class MyDropdown:
                     "label": html.Span([item], style=style_absent_values),
                     "value": item,
                 })
-            return dropdown_options
+            return dropdown_options.sort()
