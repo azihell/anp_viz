@@ -37,6 +37,7 @@ class MyRangeSlider:
                 tooltip={"placement": "top",
                             "style": {"color": "White", "fontSize": "12px"},
                 },
-                dots=True
+                dots=True,
+                updatemode="drag"
             )
         return range_slider

@@ -40,7 +40,7 @@ class Crossfilter:
                       f"\t{len(self.all_produto_list)} products"
                 )
                 return {"Municipio": self.all_municipio_list, "Ano": self.all_ano_list, "Produto": self.all_produto_list}, \
-                       sorted(self.all_municipio_list), sorted(self.all_ano_list), sorted(self.all_produto_list)
+                       sorted(self.all_municipio_list), [self.all_ano_list[0], self.all_ano_list[-1]], sorted(self.all_produto_list)
 
         #################
         # Main callback #
@@ -74,7 +74,7 @@ class Crossfilter:
             #     print("Plot trigger")
 
             DataLoad = data_load()
-            ano_check = DataLoad.loc[:, "Ano"].isin(current_selection["Ano"])
+            ano_check = DataLoad.loc[:, "Ano"].isin(list(range(current_selection["Ano"][0], current_selection["Ano"][1]+1)))
             municipio_check = DataLoad.loc[:, "Municipio"].isin(current_selection["Municipio"])
             produto_check = DataLoad.loc[:, "Produto"].isin(current_selection["Produto"])
             if line_plot_data is not None:
