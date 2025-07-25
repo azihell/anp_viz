@@ -29,7 +29,7 @@ class MyDropdown:
                     multi=True,
                     placeholder=self.placeholder,
                     maxHeight=150,
-                    className="fixed-height-multiselect-dropdown"
+                    className="dbc fixed-height-multiselect-dropdown"
                 )
     def register_callback(self, app):
         @app.callback(

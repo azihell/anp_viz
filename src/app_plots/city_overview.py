@@ -37,20 +37,22 @@ class CityOverview():
                                 "whiteSpace": "normal",
                                 "padding": "5px",
                                 },
-                    "style_filter": {"backgroundColor": "rgb(230, 230, 230)",
+                    "style_filter": {"backgroundColor": "rgba(230, 230, 230, 0.562)",
                                     "color": "rgb(50, 56, 62)",
                                     "textAlign": "center",
                                     },
-                    "style_header": {"backgroundColor": "rgb(230, 230, 230)",
+                    "style_header": {"backgroundColor": "rgb(190, 190, 186)",
                                     "color": "rgb(50, 56, 62)",
                                     "textAlign": "center",
                                     "fontSize": "14px",
                                     "fontFamily": "Helvetica",
                                     "fontWeight": "bold",
+                                    "minWidth": "200px"
                                     },
                     "style_data": {"fontSize": "12px",
-                                "fontFamily": "Verdana"},
-                }
+                                # "fontFamily": "Verdana"
+                                },
+                }  
 
                 city_overall = pd.DataFrame(filtered_data)
                 city_overall = city_overall.groupby(["Municipio","Ano","Produto"]).agg({"Revenda":"nunique", "Valor de Venda":["min","max"]}).reset_index()

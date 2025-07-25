@@ -50,14 +50,6 @@ class MyOffcanvas:
                                         dbc.Container(
                                             children=[
                                                 "Anos",
-                                                dbc.Button(
-                                                    "Todos",
-                                                    id="select-all-years-button", 
-                                                    color="primary",    
-                                                    size="sm",          
-                                                    className="justify-content-md-end",
-                                                    disabled=True,
-                                                )                                            
                                             ],
                                             className="d-flex justify-content-between align-items-center"
                                         ),
@@ -115,7 +107,6 @@ class MyOffcanvas:
                                                     color="primary",    
                                                     size="sm",          
                                                     className="justify-content-md-end",
-                                                    disabled=True,
                                                 )                                            
                                             ],
                                             className="d-flex justify-content-between align-items-center"

@@ -19,10 +19,10 @@ import src.app_components, src.app_plots
 
 load_figure_template("slate")
 
-# dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.css"
+dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.css"
 theme = dbc.themes.SLATE
 
-app = DashProxy(__name__, external_stylesheets=[theme, dbc.icons.FONT_AWESOME], transforms=[ServersideOutputTransform()])
+app = DashProxy(__name__, external_stylesheets=[theme, dbc.icons.FONT_AWESOME, dbc_css], transforms=[ServersideOutputTransform()])
 server = app.server
 
 # Top navigation bar object creation:
@@ -88,7 +88,17 @@ app.layout = dbc.Container(children=[
             dbc.Col([
                 dbc.Card([
                     dbc.Container(
-                       dcc.Graph(id="fuel_avg"),
+                        dcc.Loading(
+                            id="line-plot-loader",
+                            type="default",
+                            children=[
+                                dbc.Container(
+                                    dcc.Graph(id="fuel_avg"),
+                                    id="fuel-avg-graph-container",
+                                    style={'display': 'none'}
+                                )
+                            ]
+                        ),
                     ),
                     dbc.Tooltip("Clique e arraste no gráfico para selecionar uma faixa de tempo que também funcionará como filtro.", target="fuel_avg"),
                     src.app_plots.AllTimeAvg("fuel_avg").register_callback(app)
@@ -96,8 +106,13 @@ app.layout = dbc.Container(children=[
             ], width = 6),
             dbc.Col([
                 dbc.Card([
-                    dbc.Container(id = "city_summary_table"),
-                    src.app_plots.CityOverview("city_summary_table").register_callback(app),
+                    dbc.CardBody(
+                        children = [
+                            dbc.Container(id = "city_summary_table"),
+                            src.app_plots.CityOverview("city_summary_table").register_callback(app),
+                        ],
+                        className="p-0"
+                    )
                 ], color="secondary", outline=True)
             ], width = 6),
         ]),

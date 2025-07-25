@@ -10,8 +10,9 @@ class AllTimeAvg():
 
     def register_callback(self, app):
         @app.callback(
-            Output("fuel_avg", "figure"),
-            Input("filtered-dataset", "data"),
+            Output('fuel_avg', 'figure'),
+            Output('fuel-avg-graph-container', 'style'),
+            Input('filtered-dataset', 'data'),
             Input('filtered-selection', 'data'),
             )
         def update_all_time(filter_data, filter_selections):
@@ -36,4 +37,4 @@ class AllTimeAvg():
                     
                 )
                 figure.update_layout(margin = go.layout.Margin(t=50, b=30))
-                return figure
+                return figure, {'display': 'block'} 
