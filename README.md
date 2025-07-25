@@ -7,7 +7,7 @@ The original dataset contains the daily price for gas stations in Brazil, all re
 I started this in the mid of 2025-May, when I got my hands on two Udemy courses, plotly-dash and pandas
 A few updates will follow on this page (newest to oldest), so one can have a glimpse on the progress.
 
-2025-Jun-27
+## 2025-Jun-27
 
 I fused what I learned with my own ideas (and struggles) and cooked this visualization. It all started much like how I saw in the course, with a JupyterNotebook implementation.
 But that surely was not enough for what I want to be a real online project (in the near future), so I changed my approach to decentralized Python scripts and more classes and methods.
@@ -24,3 +24,14 @@ My design choice was to pop from the "sandwich menu" button a sidebar on the lef
 ![image](https://github.com/user-attachments/assets/17542725-cfca-45e2-8070-75d4359ca51c)
 
 Next I'll introduce KPIs. Then I'll have the project running online on some free platform.
+
+---
+
+## 2025-Jul-25
+
+Almost a month later and another update here. I had a lot of things changing in the callback session, now the dashboard [is online on Render](https://anp-dashboard.onrender.com/)! Broke so much, fixed so much, learned another much.
+So many details have to be adjusted when using a solution like Dash. Being highly customizable comes with a high cost, no wonder Streamlit and many others are there and have a place.
+But I feel the learning process will be much richer, even though it will surely be slower.
+
+I will bring more development details [in my personal page](https://azihell.github.io).
+I'll change this README later into something more technical and less... diary-like.
