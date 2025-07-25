@@ -35,5 +35,5 @@ class AllTimeAvg():
                     color = "Produto",
                     
                 )
-                figure.update_layout(margin = go.layout.Margin(t=50, b=30), template="slate")
+                figure.update_layout(margin = go.layout.Margin(t=50, b=30))
                 return figure

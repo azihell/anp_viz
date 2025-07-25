@@ -23,7 +23,6 @@ load_figure_template("slate")
 theme = dbc.themes.SLATE
 
 app = DashProxy(__name__, external_stylesheets=[theme, dbc.icons.FONT_AWESOME], transforms=[ServersideOutputTransform()])
-# app = Dash(__name__, external_stylesheets=[theme, dbc_css, dbc.icons.FONT_AWESOME])
 server = app.server
 
 # Top navigation bar object creation:
