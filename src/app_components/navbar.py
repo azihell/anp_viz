@@ -16,10 +16,13 @@ class MyNavbar:
         self.right_side = dbc.Row(
             children=[
                 dbc.Col(
-                    dbc.Button("Sobre", id="open_modal-class", color="primary", n_clicks=0, 
-                        class_name="g-0 d-flex align-items-center justify-content-center",
-                        style={"border-radius":"8px", "height":"40px", "width":"auto"}
-                    ), style={"border": "none"}, class_name="px-2"
+                    children=[
+                        dbc.Button("Sobre", id="open_modal-class", color="primary", n_clicks=0, 
+                            class_name="g-0 d-flex align-items-center justify-content-center",
+                            style={"border-radius":"8px", "height":"40px", "width":"auto"}
+                        ),
+                    ],
+                    style={"border": "none"}, class_name="px-2"
                 ),
                 dbc.Modal(
                     children = [

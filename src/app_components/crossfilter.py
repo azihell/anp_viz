@@ -1,6 +1,7 @@
 import pandas as pd
+import plotly.io as pio
 from datetime import datetime
-from dash import callback, Input, Output, State, no_update, ctx
+from dash import callback, Input, Output, State, no_update, ctx, Patch, clientside_callback
 from dash_extensions.enrich import Serverside
 from src.app_data.dfgen import data_load
 from dash.exceptions import PreventUpdate
@@ -77,13 +78,14 @@ class Crossfilter:
             ano_check = DataLoad.loc[:, "Ano"].isin(list(range(current_selection["Ano"][0], current_selection["Ano"][1]+1)))
             municipio_check = DataLoad.loc[:, "Municipio"].isin(current_selection["Municipio"])
             produto_check = DataLoad.loc[:, "Produto"].isin(current_selection["Produto"])
-            if line_plot_data is not None:
-                if "xaxis.range[0]" in line_plot_data:
-                    start_date = line_plot_data["xaxis.range[0]"]
-                    end_date = line_plot_data["xaxis.range[1]"]
-                    start_date_check = DataLoad.loc[:, "Data da Coleta"] >= start_date
-                    end_date_check = DataLoad.loc[:, "Data da Coleta"] <= end_date
-                    return Serverside(DataLoad[ano_check & municipio_check & produto_check & start_date_check & end_date_check]), current_selection
+            # if line_plot_data is not None:
+            #     if "xaxis.range[0]" in line_plot_data:
+            #         start_date = line_plot_data["xaxis.range[0]"]
+            #         end_date = line_plot_data["xaxis.range[1]"]
+            #         start_date_check = DataLoad.loc[:, "Data da Coleta"] >= start_date
+            #         end_date_check = DataLoad.loc[:, "Data da Coleta"] <= end_date
+            #         return Serverside(DataLoad[ano_check & municipio_check & produto_check & start_date_check & end_date_check]), current_selection
+            # print(current_selection["Municipio"])
             return Serverside(DataLoad[ano_check & municipio_check & produto_check]), current_selection
  
         # All cities button behavior
@@ -124,12 +126,12 @@ class Crossfilter:
             DataLoad = data_load()
             # Applies current filters in full dataset to discover possible cities can be selected
             product_check = DataLoad.loc[:, "Produto"].isin(filter_selections["Produto"])
-            year_check = DataLoad.loc[:, "Ano"].isin(filter_selections["Ano"])
+            year_check = DataLoad.loc[:, "Ano"].isin(list(range(filter_selections["Ano"][0], filter_selections["Ano"][1]+1)))
             filtered_df = DataLoad[product_check & year_check]
             remaining_cities = filtered_df["Municipio"].unique().tolist()
             # Applies current filters in full dataset to discover possible products can be selected
             city_check = DataLoad.loc[:, "Municipio"].isin(filter_selections["Municipio"])
-            year_check = DataLoad.loc[:, "Ano"].isin(filter_selections["Ano"])
+            year_check = DataLoad.loc[:, "Ano"].isin(list(range(filter_selections["Ano"][0], filter_selections["Ano"][1]+1)))
             filtered_df = DataLoad[city_check & year_check]
             remaining_products = filtered_df["Produto"].unique().tolist()
             # Returns possible selections 

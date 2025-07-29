@@ -29,7 +29,8 @@ class CityOverview():
                     "fixed_rows": {"headers": True},
                     "style_table": {"overflowY":"auto",
                                     "overflowX":"auto",
-                                    "height": 400},
+                                    "width": "100%",
+                                    "height": "100%"},
                     "style_cell": {"minWidth": "80px", "width": "auto", "maxWidth": "180px", # Responsive column widths
                                 "backgroundColor": "rgb(50, 56, 62)",
                                 "overflow": "hidden",
@@ -45,7 +46,7 @@ class CityOverview():
                                     "color": "rgb(50, 56, 62)",
                                     "textAlign": "center",
                                     "fontSize": "14px",
-                                    "fontFamily": "Helvetica",
+                                    # "fontFamily": "Helvetica",
                                     "fontWeight": "bold",
                                     "minWidth": "200px"
                                     },
@@ -72,7 +73,8 @@ class CityOverview():
                     columns=[{"name": i, "id": i} for i in city_overall.columns],
                     data = city_overall.to_dict('records'),
                     sort_action="native",
-                    filter_action="native",
+                    filter_action="custom",
+                    filter_query="",
                     page_size=30,
                     style_cell_conditional=[
                         {
@@ -81,5 +83,6 @@ class CityOverview():
                         } for c in ['Municipio', 'Produto']
                     ],
                     **presentation_props,
+                    # className="w-100"
                 )
                 return table

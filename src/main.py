@@ -14,14 +14,13 @@ if parent_dir not in _sys_path:
 from dash_extensions.enrich import DashProxy, ServersideOutputTransform, dcc
 import plotly.io as pio
 import dash_bootstrap_components as dbc
-from dash_bootstrap_templates import load_figure_template
+from dash_bootstrap_templates import load_figure_template, ThemeSwitchAIO
 import src.app_components, src.app_plots
 
-load_figure_template("slate")
+load_figure_template(["slate"])
 
 dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.css"
 theme = dbc.themes.SLATE
-
 app = DashProxy(__name__, external_stylesheets=[theme, dbc.icons.FONT_AWESOME, dbc_css], transforms=[ServersideOutputTransform()])
 server = app.server
 
@@ -57,16 +56,17 @@ app.layout = dbc.Container(children=[
         ],
         id="bad-filtering-popup", is_open = False, size="sm", centered=True,
     ),
-    # Top navigation bar render method
+    # Top navigation bar is rendered
     navbar_class.render(),
     dbc.Container(
         # className="dbc",    # Uncomment to enable DataTable to be styled according to the theme selected. But loses "style_as_list_view" : True," property while at it.
         style={"max-width": "100%", "padding": "50px", "position":"relative", "top":"20px"},
         children = [
+        # navbar_class.render(),
         dbc.Row([
             dbc.Col([
                 dbc.Card([
-                    dbc.CardHeader("Número de Postos"),
+                    dbc.CardHeader("Variação no número de postos"),
                         dbc.CardBody(
                             children=[
                                 dcc.Loading(
@@ -108,18 +108,22 @@ app.layout = dbc.Container(children=[
                 dbc.Card([
                     dbc.CardBody(
                         children = [
+                            dbc.Container(
+                               dcc.Markdown("Valores de venda - máximos e mínimos", className="text-center mt-2")
+                            )                           ,
+                            # html.H1("My Centralized DataTable Title", style={'textAlign': 'center', 'marginBottom': '20px'}),
                             dbc.Container(id = "city_summary_table"),
                             src.app_plots.CityOverview("city_summary_table").register_callback(app),
                         ],
                         className="p-0"
                     )
                 ], color="secondary", outline=True)
-            ], width = 6),
+            ], width = 6, )
         ]),
     ]),
 ], fluid=True)
 
 if __name__ == "__main__":
-  app.run(debug=False, 
+  app.run(debug=True, 
             port=8090
          )
