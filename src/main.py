@@ -31,7 +31,8 @@ filters.register_callback(app)
 
 # City overview table
 city_overview = src.app_plots.CityOverview("city_summary_table")
-tst_alltime_avg = src.app_plots.AllTimeAvg("fuel_avg")
+alltime_avg = src.app_plots.AllTimeAvg("fuel_avg")
+cities_avg = src.app_plots.CitiesTimeAvg("cities-avg-price")
 
 app.layout = dbc.Container(children=[
     dcc.Store(id='store-first-load-flag', data=None),
@@ -119,10 +120,34 @@ app.layout = dbc.Container(children=[
 
         ], className="mb-4"
     ),
-    dbc.Row(
 
- 
-    )
+
+
+
+    
+    dbc.Row(
+        children=[
+            dbc.Col([
+                dbc.Card([
+                    dbc.Container(
+                        dcc.Loading(
+                            id="bar-plot-loader",
+                            type="default",
+                            children=[
+                                dbc.Container(
+                                    dcc.Graph(id="cities-avg-price"),
+                                    id="cities-avg-price-graph-container",
+                                )
+                            ]
+                        ),
+                    ),
+                    dbc.Tooltip("Clique e arraste no gráfico para selecionar uma faixa de tempo que também funcionará como filtro.", target="fuel_avg"),
+                    src.app_plots.CitiesTimeAvg("cities-avg-price").register_callback(app)
+                ], color="secondary", outline=True)
+            ], md=12
+            ),
+        ]
+     )
 
     ], style={"position":"relative", "top":"40px", "padding": "30px"}
      , fluid=True

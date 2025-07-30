@@ -2,6 +2,7 @@ from dash import callback, Output, Input, no_update
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+import plotly.express.colors as px_colors
 
 class AllTimeAvg():
 
@@ -34,6 +35,7 @@ class AllTimeAvg():
                     x = "Data da Coleta",
                     y = "Valor de Venda medio",
                     color = "Produto",
+                    color_discrete_sequence=px_colors.qualitative.Plotly
                     
                 )
                 figure.update_layout(
