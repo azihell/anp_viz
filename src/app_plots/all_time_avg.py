@@ -36,13 +36,16 @@ class AllTimeAvg():
                     color = "Produto",
                     
                 )
-                figure.update_layout(margin = go.layout.Margin(t=50, b=30),
-                                    title={
-                                        'text': "Média diária de preços em todos os postos",
-                                        'y':0.95, # You can adjust the vertical position (0 to 1)
-                                        'x':0.5,
-                                        'xanchor': 'center',
-                                        'yanchor': 'top'
-                                    },
-                    )
+                figure.update_layout(
+                    margin = go.layout.Margin(t=50, b=60, l=20),
+                    title={
+                        'text': "Média diária de preços em todos os postos",
+                        'y':0.97, # You can adjust the vertical position (0 to 1)
+                        'x':0.5,
+                        'xanchor': 'center',
+                        'yanchor': 'top',
+                    },
+                    autosize=False,
+                    height=592
+                )
                 return figure, {'display': 'block'} 

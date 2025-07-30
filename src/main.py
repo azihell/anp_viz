@@ -1,8 +1,6 @@
 from os import path as _os_path
 from sys import path as _sys_path
 
-# import src.app_plots
-
 # Get the path to the directory *containing* src (your repository root)
 # This allows Python to find 'src' as a package when you run main.py directly
 current_dir = _os_path.dirname(_os_path.abspath(__file__))
@@ -10,7 +8,6 @@ parent_dir = _os_path.dirname(current_dir)
 if parent_dir not in _sys_path:
     _sys_path.insert(0, parent_dir)
 
-# from dash import Dash, dcc
 from dash_extensions.enrich import DashProxy, ServersideOutputTransform, dcc
 import plotly.io as pio
 import dash_bootstrap_components as dbc
@@ -38,17 +35,10 @@ tst_alltime_avg = src.app_plots.AllTimeAvg("fuel_avg")
 
 app.layout = dbc.Container(children=[
     dcc.Store(id='store-first-load-flag', data=None),
-    dcc.Store(id='filtered-selection',
-        data={"Municipio":None, "Ano":None, "Produto":None}
-        ),
-    dcc.Store(id="all-possible-values",
-        data={"Municipio":None,
-              "Ano":None,
-              "Produto":None}
-              ),
-    dcc.Store(id="filtered-dataset",
-        data={}
-              ),
+    dcc.Store(id='filtered-selection', data={"Municipio":None, "Ano":None, "Produto":None}),
+    dcc.Store(id="all-possible-values", data={"Municipio":None, "Ano":None, "Produto":None}),
+    dcc.Store(id="filtered-dataset", data={}),
+    dcc.Store(id='summary_table_data', data=None),
     dbc.Modal(
         children=[
             dbc.ModalHeader(dbc.ModalTitle("Alerta de seleção")),
@@ -58,33 +48,33 @@ app.layout = dbc.Container(children=[
     ),
     # Top navigation bar is rendered
     navbar_class.render(),
-    dbc.Container(
-        # className="dbc",    # Uncomment to enable DataTable to be styled according to the theme selected. But loses "style_as_list_view" : True," property while at it.
-        style={"max-width": "100%", "padding": "50px", "position":"relative", "top":"20px"},
-        children = [
-        # navbar_class.render(),
-        dbc.Row([
-            dbc.Col([
-                dbc.Card([
-                    dbc.CardHeader("Variação no número de postos"),
-                        dbc.CardBody(
-                            children=[
-                                dcc.Loading(
-                                    id="carregador",
-                                    type="default",
-                                    children=[
-                                        dbc.Container(id="station_count")
-                                    ]
-                                )
-                            ]
-                        ),
-                        src.app_components.StationsKPI("station_count").register_callback(app),
-                    ], color="secondary", outline=True, id="stations_header"
-                ),
-                dbc.Tooltip("O valor na segunda linha mostra o aumento (verde) ou redução (vermelho) do número de postos do 'Ano final' em comparação ao 'Ano inicial'", target="stations_header"),
-            ], width = 2),
-        ], className="mb-4"),
-        dbc.Row([
+
+    # Row #1 - KPIs
+    dbc.Row([
+        dbc.Col([
+            dbc.Card([
+                dbc.CardHeader("Variação no número de postos"),
+                    dbc.CardBody(
+                        children=[
+                            dcc.Loading(
+                                id="carregador",
+                                type="default",
+                                children=[
+                                    dbc.Container(id="station_count")
+                                ]
+                            )
+                        ]
+                    ),
+                    src.app_components.StationsKPI("station_count").register_callback(app),
+                ], color="secondary", outline=True, id="stations_header"
+            ),
+            dbc.Tooltip("O valor na segunda linha mostra o aumento (verde) ou redução (vermelho) do número de postos do 'Ano final' em comparação ao 'Ano inicial'", target="stations_header"),
+        ], width = 2),
+    ], className="mb-4"),
+
+    # Row #2 - line chart + table
+    dbc.Row(
+        children=[
             dbc.Col([
                 dbc.Card([
                     dbc.Container(
@@ -95,7 +85,6 @@ app.layout = dbc.Container(children=[
                                 dbc.Container(
                                     dcc.Graph(id="fuel_avg"),
                                     id="fuel-avg-graph-container",
-                                    style={'display': 'none'}
                                 )
                             ]
                         ),
@@ -103,26 +92,42 @@ app.layout = dbc.Container(children=[
                     dbc.Tooltip("Clique e arraste no gráfico para selecionar uma faixa de tempo que também funcionará como filtro.", target="fuel_avg"),
                     src.app_plots.AllTimeAvg("fuel_avg").register_callback(app)
                 ], color="secondary", outline=True)
-            ], width = 6),
-            dbc.Col([
-                dbc.Card([
-                    dbc.CardBody(
-                        children = [
-                            dbc.Container(
-                               dcc.Markdown("Valores de venda - máximos e mínimos", className="text-center mt-2")
-                            )                           ,
-                            # html.H1("My Centralized DataTable Title", style={'textAlign': 'center', 'marginBottom': '20px'}),
-                            dbc.Container(id = "city_summary_table"),
-                            src.app_plots.CityOverview("city_summary_table").register_callback(app),
-                        ],
-                        className="p-0"
-                    )
-                ], color="secondary", outline=True)
-            ], width = 6, )
-        ]),
-    ]),
-], fluid=True)
+            ], md=6
+            ),
+            dbc.Col(
+                children=[
+                    dbc.Row(
+                        children=[
+                            dbc.Card([
+                                dbc.CardBody(
+                                    children = [
+                                        dbc.Container(
+                                        dcc.Markdown("Valores de venda - máximos e mínimos", className="text-center mt-2")
+                                        )                           ,
+                                        dbc.Container(id = "city_summary_table"),
+                                        src.app_plots.CityOverview("city_summary_table").register_callback(app),
+                                    ],
+                                    className="p-0"
+                                )
+                                ],
+                                color="secondary", outline=True, 
+                            )
+                        ]
+                    ),
+                ], md=6
+            ),
 
+        ], className="mb-4"
+    ),
+    dbc.Row(
+
+ 
+    )
+
+    ], style={"position":"relative", "top":"40px", "padding": "30px"}
+     , fluid=True
+)
+            
 if __name__ == "__main__":
   app.run(debug=True, 
             port=8090

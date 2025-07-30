@@ -78,14 +78,13 @@ class Crossfilter:
             ano_check = DataLoad.loc[:, "Ano"].isin(list(range(current_selection["Ano"][0], current_selection["Ano"][1]+1)))
             municipio_check = DataLoad.loc[:, "Municipio"].isin(current_selection["Municipio"])
             produto_check = DataLoad.loc[:, "Produto"].isin(current_selection["Produto"])
-            # if line_plot_data is not None:
-            #     if "xaxis.range[0]" in line_plot_data:
-            #         start_date = line_plot_data["xaxis.range[0]"]
-            #         end_date = line_plot_data["xaxis.range[1]"]
-            #         start_date_check = DataLoad.loc[:, "Data da Coleta"] >= start_date
-            #         end_date_check = DataLoad.loc[:, "Data da Coleta"] <= end_date
-            #         return Serverside(DataLoad[ano_check & municipio_check & produto_check & start_date_check & end_date_check]), current_selection
-            # print(current_selection["Municipio"])
+            if line_plot_data is not None:
+                if "xaxis.range[0]" in line_plot_data:
+                    start_date = line_plot_data["xaxis.range[0]"]
+                    end_date = line_plot_data["xaxis.range[1]"]
+                    start_date_check = DataLoad.loc[:, "Data da Coleta"] >= start_date
+                    end_date_check = DataLoad.loc[:, "Data da Coleta"] <= end_date
+                    return Serverside(DataLoad[ano_check & municipio_check & produto_check & start_date_check & end_date_check]), current_selection
             return Serverside(DataLoad[ano_check & municipio_check & produto_check]), current_selection
  
         # All cities button behavior
